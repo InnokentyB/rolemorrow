@@ -81,7 +81,7 @@ docker compose -f compose.checks.yaml run --rm --no-deps checks
 
 Checks run without network access, runtime secrets or the personal data volume. This release has 95 deterministic logic/API checks, including a frozen matrix of 15 profile/vacancy combinations. Shared server/browser ranking puts role and core evidence before soft preferences. Evidence can be full, partial (with matched and missing clauses), or unconfirmed; it is not a hiring probability. Load the fictional example and check its employers to see all three states without API keys.
 
-The eight browser scripts run with disposable stores and synthetic providers:
+The nine browser scripts run with disposable stores and synthetic providers:
 
 ```sh
 docker compose -f compose.browser.yaml build browser
@@ -97,7 +97,7 @@ docker compose -f compose.checks.yaml build checks
 docker run --rm --init --cpus=1 --memory=512m --pids-limit=128 --cap-drop=ALL --security-opt=no-new-privileges --read-only --env-file /absolute/private/runtime.env -e CONFIRM_PLATFORM_QUALITY=1 rolemorrow-checks-checks node tests/quality-live.mjs
 ```
 
-Keep that environment file outside the checkout; supply only Nebius configuration needed for this workload. Never commit keys or personal state. The latest bounded report is [QUALITY-LIVE.json](docs/QUALITY-LIVE.json): six of six passed, with zero false full-support claims and zero false negatives within this subset. This is not a market accuracy estimate. See [platform acceptance](docs/PLATFORM-ACCEPTANCE.md) for scenarios and verification limits.
+Keep that environment file outside the checkout; supply only Nebius configuration needed for this workload. Never commit keys or personal state. The latest bounded report is [QUALITY-LIVE.json](docs/QUALITY-LIVE.json): six of six passed, with zero false full-support claims and zero false negatives within this subset. This is not a market accuracy estimate. See [platform acceptance](docs/PLATFORM-ACCEPTANCE.md) for scenarios and verification limits, and [user journeys](docs/USER-JOURNEYS.md) for the manual acceptance path.
 
 ## Limits and next work
 

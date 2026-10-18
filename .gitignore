@@ -34,3 +34,5 @@
 !/.github/
 !/.github/workflows/
 !/.github/workflows/checks.yml
+
+!/docs/USER-JOURNEYS.md

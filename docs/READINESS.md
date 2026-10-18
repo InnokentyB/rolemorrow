@@ -4,7 +4,7 @@ Working name: Rolemorrow. Name/domain approval is provisional; a similar career 
 
 ## Engineering evidence
 
-95 deterministic logic/API checks passed in isolated Linux amd64 Docker, including 15 frozen profile/vacancy combinations. All eight browser scripts passed in a non-root, sandboxed Chromium container with networking disabled: fresh profile, evidence/order, save, packet/export, test invitation, unsent reply, persistence, cancellation, source failure and retry. The fictional demo exposes full, partial and unconfirmed evidence without credentials.
+95 deterministic logic/API checks passed in isolated Linux amd64 Docker, including 15 frozen profile/vacancy combinations. All nine browser scripts passed in a non-root, sandboxed Chromium container with networking disabled: fresh profile, evidence/order, save, packet/export, test invitation, unsent reply, persistence, cancellation, source failure and retry. The fictional demo exposes full, partial and unconfirmed evidence without credentials.
 
 Six frozen synthetic cases also passed actual Nebius inference with zero false full-support claims or false negatives within this small subset; see QUALITY-LIVE.json. This is not a statistical quality estimate or provider uptime guarantee. Independent scoped UI finish review passed; its detector ran in degraded regex mode, and computed accessibility was not independently certified. Human UAT and broader semantic evaluation remain pending. Personal profiles, private source material and correspondence are excluded from the repository.
 
