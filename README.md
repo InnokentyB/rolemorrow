@@ -1,0 +1,89 @@
+# Rolemorrow
+
+An evidence-led career search workspace built for the **Nebius × NVIDIA Global AI Hackathon**. Rolemorrow is a provisional working name, not a cleared trademark or registered domain.
+
+Start with confirmed experience and a career goal. Choose employers. Inspect vacancy requirements against quoted profile evidence, keep your own decisions between searches, prepare an application packet, and organize correspondence.
+
+**Status:** working single-user prototype. Live vacancy search and NVIDIA inference have been exercised during development. Mail is **test/manual only**. There is no public hosted demo, real email transport, automatic job application, production authentication or multi-tenant isolation in this release. Use fictional data when demonstrating.
+
+## Quick start — Docker
+
+Requires Docker Engine and Docker Compose on a supported Linux amd64 host. The application port is published on localhost only.
+
+```sh
+cp .env.example .env
+docker compose build career
+docker compose up -d career
+docker compose ps
+curl http://127.0.0.1:3027/health
+docker compose logs --tail=100 career
+```
+
+Open **http://127.0.0.1:3027/**. Choose **Use fictional example**, then **Check selected companies**. No credentials or provider requests are needed. The example overwrites the current profile/company inputs: use a fresh demo volume rather than your personal workspace.
+
+To stop:
+
+```sh
+docker compose stop career
+# Removes containers/network, retaining the named data volume:
+docker compose down
+```
+
+Do not use `down -v` as routine cleanup. State lives in the named volume at `/app/data/state.json`; it is private but not application-encrypted. Before upgrades, preserve a backup and the previous image. Never expose this prototype directly to the Internet.
+
+For a remote Docker host, forward its localhost port over SSH. Follow your own host execution policy; the commands above do not require running the app natively.
+
+## Demo journey
+
+1. Confirm profile and goal; select up to five official employer career pages.
+2. Run the fictional example, or explicitly configure/consent to a live check.
+3. Review fit category, conditions, coverage and exact employer/profile quotations. Unknown evidence remains unknown; fit is not hiring probability.
+4. Save a job. In **Saved jobs**, report a stage, note and next action/date. A new scan preserves these decisions.
+5. In **Applications**, save a CV version/text or PDF/text files, letter and screening-answer notes; export the saved packet. Nothing is submitted to an employer.
+6. Simulate a clearly labeled invitation or add an email manually. **Inbox** shows attention items. Reply drafts remain unsent; stage proposals require confirmation.
+
+## Nebius, NVIDIA and Tavily
+
+Live mode needs server opt-in (`ALLOW_LIVE=1`), `NEBIUS_API_KEY`, `TAVILY_API_KEY`, and an exact available `NEBIUS_MODEL` in the `nvidia/` namespace. `NEBIUS_ASSESSMENT_MODEL` optionally selects a separate assessment model. Configure only `.env`/deployment secrets; never commit keys.
+
+The exercised development configuration used:
+
+- extraction: `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B`;
+- assessment: `nvidia/nemotron-3-super-120b-a12b`;
+- inference: Nebius Token Factory chat completions with structured JSON responses;
+- discovery: Tavily Search followed by direct DNS-validated retrieval of employer/linked ATS sources.
+
+Model availability is project-dependent; check the current provider catalogue before enabling live mode. The UI requires consent before transmitting the saved profile/goal to Nebius; public-source search queries go to Tavily. Local deletion cannot delete provider-held records.
+
+Search snippets never count as requirements. Only official employer sources or literally linked ATS tenants are accepted. Deterministic guards reject invalid quotes/references. Exact quotations prove provenance, not semantic correctness. Discovery is bounded and may be partial; no claim of complete market coverage or guaranteed eligibility is made.
+
+Official provider references: [Nebius quickstart](https://docs.tokenfactory.nebius.com/quickstart), [structured inference](https://docs.tokenfactory.nebius.com/ai-models-inference/json), [Tavily Search](https://docs.tavily.com/documentation/api-reference/endpoint/search).
+
+## Verification
+
+```sh
+docker compose -f compose.checks.yaml build
+docker compose -f compose.checks.yaml run --rm --no-deps checks
+```
+
+Checks run without network access, runtime secrets or the personal data volume. This release has 69 deterministic logic/API checks. GitHub Actions runs these checks and builds the runtime image; it does not claim browser or live-provider readiness.
+
+Browser scenarios are included in `tests/*-e2e.mjs`, `tests/e2e.mjs` and `tests/browser-cases.mjs`, using isolated temporary stores. They require the pinned Playwright Chromium installation in a reviewed browser environment. Run `npm run test:e2e` there. A browser container must preserve Chromium's sandbox; no unsupported browser-container setup is claimed here. Development browser passes are separate from clean-clone Docker verification and human acceptance.
+
+## Limits and next work
+
+- Single-process atomic JSON, single owner; no production authorization or account isolation.
+- Job matching still needs semantic evaluation on a held-out set; model interpretations can be wrong.
+- Mail adapter accepts local test/manual messages; no real mailbox, public webhook or sender exists.
+- English phrase-based mail suggestions, not an LLM mail classifier; corrections require exact source excerpts.
+- Files: PDF/UTF-8 text, two files up to 256 KiB each. Downloads are forced attachments; no malware scanning service is integrated.
+- Storage: 200 messages, 500 saved jobs and 32 MiB total. Compatibility backups are private; explicit workspace deletion includes app-managed backups.
+- Public demo, video and final hackathon submission remain separate tasks.
+
+See [architecture](docs/ARCHITECTURE.md) and [readiness](docs/READINESS.md). No personal profiles, real correspondence, CVs, credentials, operator backups or internal review screenshots are included.
+
+## Origin and license
+
+This career-search implementation began during the competition period in October 2026 after a product pivot. The earlier banking prototype is separate and is not included. Test-Driven Product Development (TDPD), an original method by Innokenty Bodrov, guided scenario-first implementation; automated engineering checks do not replace human UAT.
+
+MIT — see [LICENSE](LICENSE). Third-party packages retain their own licenses. No endorsement by Nebius, NVIDIA or Tavily is implied.

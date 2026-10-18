@@ -1,0 +1,36 @@
+import {chromium} from 'playwright';
+import assert from 'node:assert/strict';
+import {mkdtemp,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {createServer} from '../app/server.mjs';
+import {providers,job} from './fixtures.mjs';
+const dir=await mkdtemp(join(tmpdir(),'career-workspace-'));
+const server=createServer({storeFile:join(dir,'state.json'),providers:providers({discover:async c=>({jobs:c.name==='Northstar'?[job('one'),job('two',{title:'Platform Product Manager'})]:[],coverage:'checked'})})});
+await new Promise(r=>server.listen(0,'127.0.0.1',r));
+const browser=await chromium.launch();
+try{
+ const page=await browser.newPage({viewport:{width:1440,height:1000}});
+ await page.goto(`http://127.0.0.1:${server.address().port}`);
+ await page.getByRole('button',{name:'Use fictional example',exact:true}).click();
+ await page.getByRole('button',{name:'Check selected companies',exact:true}).click();
+ await page.locator('.vacancy').first().waitFor();
+ const first=page.locator('.vacancy').first();
+ await first.getByRole('button',{name:'Show job details',exact:true}).waitFor();
+ assert.equal(await first.locator('.job-detail').isVisible(),false);
+ await first.getByRole('button',{name:'Show job details',exact:true}).click();
+ assert.equal(await first.locator('.job-detail').isVisible(),true);
+ await first.getByText('Review evidence',{exact:true}).click();
+ await first.getByText('AI product evaluation',{exact:true}).waitFor();
+ await first.getByRole('button',{name:'Hide job details',exact:true}).click();
+ await page.getByLabel('Search results').fill('Platform');
+ assert.equal(await page.locator('.vacancy').count(),1);
+ await page.getByLabel('Search results').fill('no-such-role');
+ await page.getByText('No results match these filters. Clear the search or choose All recommendations.').waitFor();
+ await page.getByLabel('Search results').fill('');
+ await page.setViewportSize({width:390,height:844});
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+ await page.locator('.vacancy').first().getByRole('button',{name:'Show job details',exact:true}).click();
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+ console.log('W01/W02/W03/W07 compact workspace browser PASS');
+}finally{await browser.close();await new Promise(r=>server.close(r));await rm(dir,{recursive:true,force:true});}

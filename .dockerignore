@@ -1,0 +1,17 @@
+.git
+.github
+node_modules
+.env
+.env.*
+data
+work
+artifacts
+research
+.impeccable
+PRODUCT.md
+DESIGN.md
+TOWER-DOCKER.md
+docs/*
+!docs/ARCHITECTURE.md
+!docs/READINESS.md
+tests/preview.mjs

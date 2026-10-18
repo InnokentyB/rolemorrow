@@ -1,0 +1,16 @@
+name: Source checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  deterministic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Build isolated checks image
+        run: docker compose -f compose.checks.yaml build
+      - name: Syntax and deterministic tests (no network or credentials)
+        run: docker compose -f compose.checks.yaml run --rm --no-deps checks
+      - name: Build runtime image
+        run: docker compose build career
