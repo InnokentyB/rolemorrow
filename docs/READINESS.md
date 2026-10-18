@@ -4,7 +4,7 @@ Working name: Rolemorrow. Name/domain approval is provisional; a similar career 
 
 ## Engineering evidence
 
-100 deterministic logic/API checks passed in isolated Linux amd64 Docker, including 15 frozen profile/vacancy combinations. All nine browser scripts passed in a non-root, sandboxed Chromium container with networking disabled: fresh profile, evidence/order, save, packet/export, test invitation, unsent reply, persistence, cancellation, source failure and retry. The fictional demo exposes full, partial and unconfirmed evidence without credentials.
+105 deterministic logic/API checks passed in isolated Linux amd64 Docker, including 15 frozen profile/vacancy combinations. All nine browser scripts passed in a non-root, sandboxed Chromium container with networking disabled: fresh profile, evidence/order, save, packet/export, test invitation, unsent reply, persistence, cancellation, source failure and retry. The fictional demo exposes full, partial and unconfirmed evidence without credentials.
 
 Six frozen synthetic cases also passed actual Nebius inference with zero false full-support claims or false negatives within this small subset; see QUALITY-LIVE.json. This is not a statistical quality estimate or provider uptime guarantee. Independent scoped UI finish review passed; its detector ran in degraded regex mode, and computed accessibility was not independently certified. Human UAT and broader semantic evaluation remain pending. Personal profiles, private source material and correspondence are excluded from the repository.
 
@@ -33,3 +33,7 @@ Do not add all future features before the hackathon demo. First make one safe, r
 ## Profession/level increment
 
 100 deterministic checks and nine browser scripts passed. Actual v2 inference passed 14/15 fixed synthetic cases across nine profiles: prior profession errors and all new tenure comparisons were correct. One initial junior/growth assessment was unavailable; a separate retry succeeded, with cause/stability still unresolved. Reports preserve both observations. No false full support occurred in this small set. Human UAT, broader semantic coverage and public-service boundaries remain pending.
+
+## Saved-source and next-action increment
+
+105 deterministic checks and nine sandboxed browser scripts passed. Manual source checks preserve the original assessment, decisions, packets and correspondence, with revision-guarded acknowledgement and a bounded history. Inbox projects UTC overdue/planned actions, source-review needs, earlier assessments, clarification, packet readiness and existing mail tasks. No scheduler or sender was added. A bounded three-URL live read produced one readable baseline and two unavailable results; dynamic/access-controlled sources remain a compatibility limit. Human usability acceptance remains pending.

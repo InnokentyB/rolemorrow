@@ -24,3 +24,9 @@ Local Host/Origin checks are not user authentication. Before an Internet-accessi
 Assessment rows may carry `partial`: exact profile citation, exact matched `jobQuote` and non-overlapping `unconfirmedQuote` from the requirement. Independent review can downgrade full support to partial or unknown; it cannot promote claims. Tool, duration and experiment-culture guards apply after that review. Unknown experience remains unknown rather than a proved gap.
 
 `public/matching.js` is shared by server and browser: category, role alignment, full core fraction, partial core fraction, fewer gaps, conditions, soft preferences, stable identity. Optional requirements cannot increase core coverage. API projection marks historical runs and saved assessments stale when the profile or evidence policy changes; stored snapshots and candidate decisions are preserved. New results carry policy `2026-10-18-partial-ranking-v1`. No new authorization boundary or mail sender was introduced.
+
+## Manual source observations and next actions
+
+`POST /api/opportunities/:id/recheck` writes only source-observation fields on the existing Opportunity. Real requests require live access and explicit consent; safeFetch retains DNS/IP, redirect, timeout and size protections. At most two checks run concurrently and duplicate IDs are refused. Snapshot changes/deletion prevent late writes. History is capped at 20 observations, with the last-readable baseline stored separately. `POST /api/opportunities/:id/source-review` acknowledges a specific observation revision; no candidate decision, assessment or packet changes.
+
+`public/actions.js` projects next actions from canonical saved decisions, source-review flags, packets, fit clarifications and mail tasks. The server exposes this read-only projection; Inbox renders saved-role actions with existing mail task controls below. UTC dates are explicit. No task database, scheduler or automatic stage transition was added.

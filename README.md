@@ -79,7 +79,7 @@ docker compose -f compose.checks.yaml build
 docker compose -f compose.checks.yaml run --rm --no-deps checks
 ```
 
-Checks run without network access, runtime secrets or the personal data volume. This release has 100 deterministic logic/API checks, including a frozen matrix of 15 profile/vacancy combinations. Shared server/browser ranking puts role and core evidence before soft preferences. Evidence can be full, partial (with matched and missing clauses), or unconfirmed; it is not a hiring probability. Load the fictional example and check its employers to see all three states without API keys.
+Checks run without network access, runtime secrets or the personal data volume. This release has 105 deterministic logic/API checks, including a frozen matrix of 15 profile/vacancy combinations. Shared server/browser ranking puts role and core evidence before soft preferences. Evidence can be full, partial (with matched and missing clauses), or unconfirmed; it is not a hiring probability. Load the fictional example and check its employers to see all three states without API keys.
 
 The nine browser scripts run with disposable stores and synthetic providers:
 
@@ -100,6 +100,12 @@ docker run --rm --init --cpus=1 --memory=512m --pids-limit=128 --cap-drop=ALL --
 Keep that environment file outside the checkout; supply only Nebius configuration needed for this workload. Never commit keys or personal state. The original six-case bounded report is [QUALITY-LIVE.json](docs/QUALITY-LIVE.json): six of six passed, with zero false full-support claims and zero false negatives within this subset. This is not a market accuracy estimate. See [platform acceptance](docs/PLATFORM-ACCEPTANCE.md) for scenarios and verification limits, and [user journeys](docs/USER-JOURNEYS.md) for the manual acceptance path.
 
 Additional multi-persona evaluation: [nine synthetic candidates and preserved v1/v2 results](docs/PERSONA-EVALUATION.md). V2 passed 14/15 fixed cases: explicit profession differences and all three product-tenure cases passed; a junior/growth assessment was unavailable on the initial run. Level review separates stated scope from overall seniority. See [rules and limits](docs/ROLE-LEVEL-ACCEPTANCE.md).
+
+## Saved source checks and next actions
+
+Saved jobs have an explicit **Check vacancy source** action. Fictional checks never access the network. Real checks require live access and send only the public posting URL, without profile or application content. A first readable page records a baseline; missing saved core wording or later page changes ask for review. These observations do not rerun matching. Dynamic/access-blocked pages remain unavailable. A 404/410 is not proof that the employer closed the vacancy. Source change alerts remain until **Mark source reviewed**; this acknowledgement does not update an assessment or packet. History retains the last 20 checks and a separate last-readable baseline. No scheduled monitor runs.
+
+Inbox combines saved-role next actions, overdue dates (UTC calendar days), uncertainty, packet readiness and existing correspondence tasks. Links lead to the existing decision/application controls; no second task store or automatic stage changes. See [acceptance scenarios](docs/TRACKING-ACTIONS-ACCEPTANCE.md).
 
 ## Limits and next work
 

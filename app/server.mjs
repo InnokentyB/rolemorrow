@@ -1,3 +1,5 @@
+import {checkSavedSource} from './source-check.mjs';
+import {nextActions} from '../public/actions.js';
 import {rankResults} from '../public/matching.js';
 import http from 'node:http';
 import {readFileSync,writeFileSync,mkdirSync,renameSync,existsSync,unlinkSync} from 'node:fs';
@@ -12,11 +14,11 @@ export const EVIDENCE_POLICY='2026-10-18-profession-level-v2';
 const publicDir=fileURLToPath(new URL('../public/',import.meta.url));
 const blank=()=>({revision:0,profile:null,companies:[],run:null,history:[],opportunities:[],applications:[],messages:[],replyDrafts:[],mailSchema:1});
 export function createServer({providers,storeFile=join(process.cwd(),'data','state.json'),env=process.env}={}){
- let state=existsSync(storeFile)?JSON.parse(readFileSync(storeFile,'utf8')):blank();let active=null;
+ let state=existsSync(storeFile)?JSON.parse(readFileSync(storeFile,'utf8')):blank();let active=null;const sourceChecks=new Set();
  state.opportunities??=[];state.applications??=[];state.messages??=[];state.replyDrafts??=[];
  function mutate(change){const next=structuredClone(state);change(next);next.revision++;mkdirSync(dirname(storeFile),{recursive:true,mode:0o700});if(existsSync(storeFile)&&!JSON.parse(readFileSync(storeFile,'utf8')).opportunities){try{writeFileSync(storeFile+'.pre-tracking.bak',readFileSync(storeFile),{mode:0o600,flag:'wx'});}catch(e){if(e.code!=='EEXIST')throw e;}}if(existsSync(storeFile)&&JSON.parse(readFileSync(storeFile,'utf8')).mailSchema!==1){try{writeFileSync(storeFile+'.pre-mail.bak',readFileSync(storeFile),{mode:0o600,flag:'wx'});}catch(e){if(e.code!=='EEXIST')throw e;}}next.mailSchema=1;const serialized=JSON.stringify(next);if(Buffer.byteLength(serialized)>32*1024*1024)throw new MailError(400,'Local workspace storage limit reached (32 MiB).');const tmp=storeFile+'.tmp';writeFileSync(tmp,serialized,{mode:0o600});renameSync(tmp,storeFile);state=next;}
  if(state.run?.status==='running')mutate(s=>{s.run.status='failed';s.run.note='Previous process stopped. Start a new check.';});
- function publicState(){return {...state,opportunities:state.opportunities.map(o=>({...o,assessmentStale:o.snapshot.profileVersion!==state.profile?.version||!!(o.snapshot.assessment&&o.snapshot.evidencePolicy!==EVIDENCE_POLICY)})),applications:state.applications.map(publicApplication),messages:state.messages.map(publicMessage),mailTransport:{mode:'test/manual',liveReady:false,note:'Domain and verified mail provider are not connected. Live sending and reception are disabled.'},run:state.run?{...state.run,stale:state.run.stale||(state.run.mode!=='manual'&&state.run.evidencePolicy!==EVIDENCE_POLICY),results:rankResults(state.run.results).map(r=>({...r,opportunityId:state.opportunities.find(o=>o.identity===opportunityKey(r,state.run.mode))?.id??null}))}:null,history:undefined,config:{liveReady:env.ALLOW_LIVE==='1'&&!!env.NEBIUS_API_KEY&&!!env.TAVILY_API_KEY&&/^nvidia\//.test(env.NEBIUS_MODEL??'')&&(!env.NEBIUS_ASSESSMENT_MODEL||/^nvidia\//.test(env.NEBIUS_ASSESSMENT_MODEL)),modeLabel:'Fictional example · no external requests'},intakeQuestions:intakeQuestions(state.profile)};}
+ function publicState(){const opportunities=state.opportunities.map(o=>({...o,assessmentStale:o.snapshot.profileVersion!==state.profile?.version||!!(o.snapshot.assessment&&o.snapshot.evidencePolicy!==EVIDENCE_POLICY)}));return {...state,nextActions:nextActions({...state,opportunities}),opportunities,applications:state.applications.map(publicApplication),messages:state.messages.map(publicMessage),mailTransport:{mode:'test/manual',liveReady:false,note:'Domain and verified mail provider are not connected. Live sending and reception are disabled.'},run:state.run?{...state.run,stale:state.run.stale||(state.run.mode!=='manual'&&state.run.evidencePolicy!==EVIDENCE_POLICY),results:rankResults(state.run.results).map(r=>({...r,opportunityId:state.opportunities.find(o=>o.identity===opportunityKey(r,state.run.mode))?.id??null}))}:null,history:undefined,config:{liveReady:env.ALLOW_LIVE==='1'&&!!env.NEBIUS_API_KEY&&!!env.TAVILY_API_KEY&&/^nvidia\//.test(env.NEBIUS_MODEL??'')&&(!env.NEBIUS_ASSESSMENT_MODEL||/^nvidia\//.test(env.NEBIUS_ASSESSMENT_MODEL)),modeLabel:'Fictional example · no external requests'},intakeQuestions:intakeQuestions(state.profile)};}
  const stillCurrent=runId=>active?.id===runId&&state.run?.id===runId&&state.run.status==='running';
  async function execute(runId,snapshot,adapter,signal){
   let position=0;
@@ -58,7 +60,7 @@ export function createServer({providers,storeFile=join(process.cwd(),'data','sta
     if(path==='/api/state')return send(200,publicState());
     if(path==='/health')return send(200,{ok:true});
     if(path.startsWith('/api/application-files/')||path.startsWith('/api/message-files/')){const [,,group,ownerId,fileId]=path.split('/');const owner=group==='application-files'?state.applications.find(a=>a.opportunityId===ownerId):state.messages.find(m=>m.id===ownerId);const file=owner&&[...owner.files,...(owner.history??[]).flatMap(h=>h.files)].find(f=>f.id===fileId);if(!file)return send(404,{error:'File not found.'});res.setHeader('Content-Type','application/octet-stream');res.setHeader('Content-Disposition',`attachment; filename="${file.name}"`);res.setHeader('Cache-Control','no-store');res.end(Buffer.from(file.base64,'base64'));return;}
-    const files={'/':'index.html','/app.js':'app.js','/mail.js':'mail.js','/matching.js':'matching.js','/style.css':'style.css'};
+    const files={'/':'index.html','/app.js':'app.js','/mail.js':'mail.js','/matching.js':'matching.js','/actions.js':'actions.js','/style.css':'style.css'};
     if(!files[path])return send(404,{error:'Not found.'});const file=files[path];res.setHeader('Content-Type',file.endsWith('.css')?'text/css':file.endsWith('.js')?'text/javascript':'text/html; charset=utf-8');res.setHeader('Cache-Control','no-store');res.end(readFileSync(join(publicDir,file)));return;
    }
    let bytes=0,chunks=[];for await(const chunk of req){bytes+=chunk.length;if(bytes>((path.startsWith('/api/applications/')||path==='/api/mail/intake')?1048576:64000))return send(413,{error:'Input too large.'});chunks.push(chunk);}let body;try{body=JSON.parse(Buffer.concat(chunks).toString()||'{}');}catch{return send(400,{error:'Invalid JSON.'});}
@@ -70,6 +72,23 @@ export function createServer({providers,storeFile=join(process.cwd(),'data','sta
     const existing=state.opportunities.find(o=>o.identity===opportunityKey(result,state.run.mode));if(existing)return send(200,publicState());
     if(state.opportunities.length>=500)return send(400,{error:'Saved job limit reached (500).'});
     mutate(s=>saveOpportunity(s,result));return send(200,publicState());
+   }
+   if(/^\/api\/opportunities\/[^/]+\/source-review$/.test(path)&&req.method==='POST'){
+    const o=state.opportunities.find(v=>v.id===path.split('/')[3]);if(!o)return send(404,{error:'Saved job not found.'});
+    if(!Number.isInteger(body.sourceCheckRevision)||body.sourceCheckRevision!==o.sourceCheckRevision)return send(409,{error:'Source observation changed. Review the latest check before acknowledging it.'});
+    mutate(s=>{const item=s.opportunities.find(v=>v.id===o.id);item.sourceReviewRequired=false;item.sourceReviewedAt=new Date().toISOString();});return send(200,publicState());
+   }
+   if(/^\/api\/opportunities\/[^/]+\/recheck$/.test(path)&&req.method==='POST'){
+    const opportunityId=path.split('/')[3],o=state.opportunities.find(v=>v.id===opportunityId);if(!o)return send(404,{error:'Saved job not found.'});
+    if(o.runMode!=='fixture'&&(env.ALLOW_LIVE!=='1'||body.consent!==true))return send(403,{error:'Enable live access and confirm checking this public source. No profile is transmitted.'});
+    if(o.snapshot.source.authority==='user-supplied unverified')return send(400,{error:'Unverified descriptions cannot be checked as official postings.'});
+    if(sourceChecks.size>=2||sourceChecks.has(o.id))return send(409,{error:'This vacancy source is already being checked.'});
+    sourceChecks.add(o.id);const original=hash(o.snapshot);try{
+     const copy=structuredClone(o);const read=providers?.recheck?(_url,options)=>providers.recheck(copy,options):o.runMode==='fixture'?async()=>({url:o.snapshot.url,text:`${o.snapshot.title}. ${o.snapshot.text}`}):undefined;
+     const observation=await checkSavedSource(copy,{read,signal:AbortSignal.timeout(22000)});
+     const current=state.opportunities.find(v=>v.id===o.id);if(!current||hash(current.snapshot)!==original)return send(409,{error:'Saved source changed during the check. Retry on the current record.'});
+     mutate(s=>{const item=s.opportunities.find(v=>v.id===o.id);item.sourceCheck=observation;item.sourceCheckRevision=(item.sourceCheckRevision??0)+1;if(['changed','possibly-closed','not-found'].includes(observation.status))item.sourceReviewRequired=true;if(observation.contentHash)item.lastReadableSourceCheck=observation;item.sourceCheckHistory=[...(item.sourceCheckHistory??[]),observation].slice(-20);});return send(200,publicState());
+    }finally{sourceChecks.delete(o.id);}
    }
    if(path.startsWith('/api/opportunities/')&&req.method==='POST'){
     const opportunity=state.opportunities.find(o=>o.id===path.slice('/api/opportunities/'.length));if(!opportunity)return send(404,{error:'Saved job not found. Reload saved jobs.'});
