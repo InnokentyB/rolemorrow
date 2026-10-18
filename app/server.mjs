@@ -8,7 +8,7 @@ import {getProviders,createFixtureProviders} from './providers.mjs';
 import {validatePublicUrl} from './network.mjs';
 import {opportunityKey,observe,saveOpportunity,validateDecision} from './opportunities.mjs';
 import {mailAction,MailError,publicApplication,publicMessage} from './mail.mjs';
-export const EVIDENCE_POLICY='2026-10-18-partial-ranking-v1';
+export const EVIDENCE_POLICY='2026-10-18-profession-level-v2';
 const publicDir=fileURLToPath(new URL('../public/',import.meta.url));
 const blank=()=>({revision:0,profile:null,companies:[],run:null,history:[],opportunities:[],applications:[],messages:[],replyDrafts:[],mailSchema:1});
 export function createServer({providers,storeFile=join(process.cwd(),'data','state.json'),env=process.env}={}){

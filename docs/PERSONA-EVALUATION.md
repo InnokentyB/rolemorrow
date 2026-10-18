@@ -46,3 +46,7 @@ Follow-up scenarios:
 3. Add realistic multi-requirement and seniority cases before interpreting a one-requirement full match as a strong overall application. Current role titles and sparse fictional requirements do not establish level fit.
 
 96 deterministic checks passed after adding the input-contract check. No production model prompt, evidence policy, ranking or UI was changed by this evaluation. Human acceptance and broader sampling remain pending.
+
+## Profession/level follow-up (v2)
+
+[New acceptance rules](ROLE-LEVEL-ACCEPTANCE.md) and [v2 actual inference](PERSONA-V2-LIVE.json) retain the original cases and add three tenure profiles: one product year, seven product years and seven finance-operations years. Set `PERSONA_BANK=v2` alongside `CONFIRM_PERSONA_QUALITY=1` for at most 30 inference calls. Result: 14/15 expected cases; both disjoint-profession judgments and all new tenure cases passed. One initial junior/growth assessment remained unavailable. A [separate diagnostic retry](PERSONA-V2-DIAGNOSTIC.json) returned partial support, without rewriting the initial outcome. The first failure cause remains unknown. [V2 API replay](PERSONA-V2-REPLAY.json) verifies recorded outputs through nine isolated stores.

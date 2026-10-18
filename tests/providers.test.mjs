@@ -270,3 +270,13 @@ test('PP04 independent audit can downgrade a full proposal to a validated partia
 test('PD01 fictional demo exposes full, partial and unconfirmed evidence without providers',async()=>{
  const p=createFixtureProviders();const statuses=[];for(const company of companies){const d=await p.discover(company);for(const j of d.jobs){const a=await p.assess(j,profile);statuses.push(...a.rows.map(r=>r.status));}}assert.ok(statuses.includes('supported'));assert.ok(statuses.includes('partial'));assert.ok(statuses.includes('unknown'));
 });
+test('RF03 tenure in finance operations is not product-management tenure',async()=>{
+ const text='At least 5 years of product management experience.';
+ for(const [quote,status]of [['I have 7 years of finance operations experience.','unknown'],['I have 7 years of product management experience.','supported']]){
+ const p=getProviders({env:liveEnv,transport:async()=>({text:JSON.stringify({choices:[{message:{content:JSON.stringify({direction:'aligned',directionReason:'Same profession.',rows:[{requirementId:'r1',status:'supported',factId:'tenure',profileQuote:quote,jobQuote:text}]})}}]})})});assert.equal((await p.assess({title:'Senior Product Manager',requirements:[{id:'r1',text,core:true}]},{...profile,facts:[{id:'tenure',text:quote}]})).rows[0].status,status);
+ }
+});
+test('RF01 provider boundary normalizes recognized professions without rejecting alternative targets',async()=>{
+ const text='Own API integrations.';const p=getProviders({env:liveEnv,transport:async()=>({text:JSON.stringify({choices:[{message:{content:JSON.stringify({direction:'uncertain',directionReason:'Shared API vocabulary.',rows:[{requirementId:'r1',status:'unknown',factId:null,profileQuote:null,jobQuote:text}]})}}]})})});
+ for(const [roles,direction]of [['Machine Learning Engineer','different'],['Product Designer','different'],['Machine Learning Engineer or Product Manager','aligned']])assert.equal((await p.assess({title:'Platform Product Manager',requirements:[{id:'r1',text,core:true}]},{...profile,goal:{...profile.goal,roles}})).direction,direction);
+});

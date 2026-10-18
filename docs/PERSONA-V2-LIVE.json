@@ -1,0 +1,1041 @@
+{
+  "checkedAt": "2026-10-18T13:29:54.594Z",
+  "benchmarkVersion": "persona-bank-2026-10-18-v2",
+  "evidencePolicy": "2026-10-18-profession-level-v2",
+  "syntheticOnly": true,
+  "mode": "actual Nebius inference",
+  "model": "nvidia/nemotron-3-super-120b-a12b",
+  "profiles": 9,
+  "cases": 15,
+  "passed": 14,
+  "falseSupported": 0,
+  "falseNegative": 0,
+  "people": {
+    "api": {
+      "name": "Maya · API product manager",
+      "profile": {
+        "facts": [
+          {
+            "id": "f1",
+            "text": "I owned API integrations for a B2B product."
+          },
+          {
+            "id": "f2",
+            "text": "I interviewed enterprise customers; I have not built product health dashboards."
+          }
+        ],
+        "goal": {
+          "roles": "Product Manager",
+          "industries": "software",
+          "country": "Portugal",
+          "workMode": "any"
+        }
+      }
+    },
+    "ml": {
+      "name": "Leon · ML engineer",
+      "profile": {
+        "facts": [
+          {
+            "id": "f1",
+            "text": "I trained machine learning models and deployed model-serving APIs."
+          },
+          {
+            "id": "f2",
+            "text": "I implemented model monitoring in Python."
+          }
+        ],
+        "goal": {
+          "roles": "Machine Learning Engineer",
+          "industries": "software",
+          "country": "Portugal",
+          "workMode": "any"
+        }
+      }
+    },
+    "design": {
+      "name": "Amina · product designer",
+      "profile": {
+        "facts": [
+          {
+            "id": "f1",
+            "text": "I conducted user interviews and designed interactive prototypes."
+          },
+          {
+            "id": "f2",
+            "text": "I worked with product managers; I did not own API integrations."
+          }
+        ],
+        "goal": {
+          "roles": "Product Designer",
+          "industries": "software",
+          "country": "Portugal",
+          "workMode": "any"
+        }
+      }
+    },
+    "switch": {
+      "name": "Tom · finance-to-product transition",
+      "profile": {
+        "facts": [
+          {
+            "id": "f1",
+            "text": "I owned payment reconciliation and settlement as a finance operations analyst."
+          },
+          {
+            "id": "f2",
+            "text": "I want to move into product management; I have not yet managed API integrations."
+          }
+        ],
+        "goal": {
+          "roles": "Product Manager",
+          "industries": "software",
+          "country": "Portugal",
+          "workMode": "any"
+        }
+      }
+    },
+    "junior": {
+      "name": "Sofia · junior product manager",
+      "profile": {
+        "facts": [
+          {
+            "id": "f1",
+            "text": "I ran A/B tests for one checkout feature."
+          },
+          {
+            "id": "f2",
+            "text": "I did not establish an organization-wide experimentation culture."
+          }
+        ],
+        "goal": {
+          "roles": "Product Manager",
+          "industries": "software",
+          "country": "Portugal",
+          "workMode": "any"
+        }
+      }
+    },
+    "legacy": {
+      "name": "Alex · telecom platform leader",
+      "profile": {
+        "facts": [
+          {
+            "id": "f1",
+            "text": "I led incremental migration of a telecom monolith into billing and ordering services."
+          },
+          {
+            "id": "f2",
+            "text": "I owned API integrations and built product health dashboards."
+          }
+        ],
+        "goal": {
+          "roles": "Product Manager",
+          "industries": "software",
+          "country": "Portugal",
+          "workMode": "any"
+        }
+      }
+    },
+    "juniorTenure": {
+      "name": "Nina · one year in product",
+      "profile": {
+        "facts": [
+          {
+            "id": "api",
+            "text": "I own API integrations."
+          },
+          {
+            "id": "years",
+            "text": "I have 1 year of product management experience."
+          }
+        ],
+        "goal": {
+          "roles": "Product Manager",
+          "industries": "software",
+          "country": "Portugal",
+          "workMode": "any"
+        }
+      }
+    },
+    "experienced": {
+      "name": "Sam · seven years in product",
+      "profile": {
+        "facts": [
+          {
+            "id": "api",
+            "text": "I own API integrations."
+          },
+          {
+            "id": "years",
+            "text": "I have 7 years of product management experience."
+          }
+        ],
+        "goal": {
+          "roles": "Product Manager",
+          "industries": "software",
+          "country": "Portugal",
+          "workMode": "any"
+        }
+      }
+    },
+    "operations": {
+      "name": "Robin · seven years in finance operations",
+      "profile": {
+        "facts": [
+          {
+            "id": "api",
+            "text": "I own API integrations."
+          },
+          {
+            "id": "years",
+            "text": "I have 7 years of finance operations experience."
+          }
+        ],
+        "goal": {
+          "roles": "Product Manager",
+          "industries": "software",
+          "country": "Portugal",
+          "workMode": "any"
+        }
+      }
+    }
+  },
+  "results": [
+    {
+      "personId": "api",
+      "jobId": "api",
+      "status": "partial",
+      "direction": "aligned",
+      "name": "Maya · API product manager",
+      "title": "Platform Product Manager",
+      "actual": "partial",
+      "actualDirection": "aligned",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "partial",
+            "factId": "f1",
+            "profileQuote": "I owned API integrations for a B2B product.",
+            "jobQuote": "Own API integrations",
+            "unconfirmedQuote": "build product health dashboards"
+          }
+        ]
+      },
+      "classification": {
+        "levelReview": {
+          "status": "not-specified",
+          "label": null,
+          "text": "The listing does not establish a level requirement. Confirm scope with the employer.",
+          "requirementIds": []
+        },
+        "evidenceFit": {
+          "full": 0,
+          "partial": 1,
+          "gaps": 0,
+          "unknown": 0,
+          "total": 1,
+          "level": "Partial evidence"
+        },
+        "clarifications": [
+          {
+            "requirementId": "r1",
+            "unconfirmedQuote": "build product health dashboards",
+            "question": "Can you provide a concrete example of: build product health dashboards"
+          }
+        ],
+        "conditionState": "clear",
+        "category": "Conditional",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "0 of 1 core requirements fully supported by profile evidence. 1 partially supported; review the missing clauses.",
+        "direction": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately."
+      }
+    },
+    {
+      "personId": "api",
+      "jobId": "ml",
+      "status": "unknown",
+      "direction": "different",
+      "name": "Maya · API product manager",
+      "title": "Machine Learning Engineer",
+      "actual": "unknown",
+      "actualDirection": "different",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "different",
+        "directionReason": "The engineering role is a different profession from the explicitly stated product career direction. Shared skills do not establish the same function.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "unknown",
+            "factId": null,
+            "profileQuote": null,
+            "jobQuote": "Train machine learning models and deploy model-serving APIs."
+          }
+        ]
+      },
+      "classification": {
+        "levelReview": {
+          "status": "not-specified",
+          "label": null,
+          "text": "The listing does not establish a level requirement. Confirm scope with the employer.",
+          "requirementIds": []
+        },
+        "evidenceFit": {
+          "full": 0,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 1,
+          "total": 1,
+          "level": "Different function"
+        },
+        "clarifications": [
+          {
+            "requirementId": "r1",
+            "unconfirmedQuote": "Train machine learning models and deploy model-serving APIs.",
+            "question": "Can you provide a concrete example of: Train machine learning models and deploy model-serving APIs."
+          }
+        ],
+        "conditionState": "clear",
+        "category": "Low priority",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "0 of 1 core requirements fully supported by profile evidence.",
+        "direction": "The engineering role is a different profession from the explicitly stated product career direction. Shared skills do not establish the same function."
+      }
+    },
+    {
+      "personId": "ml",
+      "jobId": "ml",
+      "status": "supported",
+      "direction": "aligned",
+      "name": "Leon · ML engineer",
+      "title": "Machine Learning Engineer",
+      "actual": "supported",
+      "actualDirection": "aligned",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "Job title 'Machine Learning Engineer' matches profile goal roles 'Machine Learning Engineer'. Work content involves training ML models and deploying model-serving APIs, which aligns with the role.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "supported",
+            "factId": "f1",
+            "profileQuote": "I trained machine learning models and deployed model-serving APIs.",
+            "jobQuote": "Train machine learning models and deploy model-serving APIs."
+          }
+        ]
+      },
+      "classification": {
+        "levelReview": {
+          "status": "not-specified",
+          "label": null,
+          "text": "The listing does not establish a level requirement. Confirm scope with the employer.",
+          "requirementIds": []
+        },
+        "evidenceFit": {
+          "full": 1,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 0,
+          "total": 1,
+          "level": "Full evidence"
+        },
+        "clarifications": [],
+        "conditionState": "clear",
+        "category": "Worth reviewing",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "1 of 1 core requirements fully supported by profile evidence.",
+        "direction": "Job title 'Machine Learning Engineer' matches profile goal roles 'Machine Learning Engineer'. Work content involves training ML models and deploying model-serving APIs, which aligns with the role."
+      }
+    },
+    {
+      "personId": "ml",
+      "jobId": "api",
+      "status": "unknown",
+      "direction": "different",
+      "name": "Leon · ML engineer",
+      "title": "Platform Product Manager",
+      "actual": "unknown",
+      "actualDirection": "different",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "different",
+        "directionReason": "The product role is a different profession from the explicitly stated engineering career direction. Shared skills do not establish the same function.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "unknown",
+            "factId": null,
+            "profileQuote": null,
+            "jobQuote": "Own API integrations and build product health dashboards."
+          }
+        ]
+      },
+      "classification": {
+        "levelReview": {
+          "status": "not-specified",
+          "label": null,
+          "text": "The listing does not establish a level requirement. Confirm scope with the employer.",
+          "requirementIds": []
+        },
+        "evidenceFit": {
+          "full": 0,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 1,
+          "total": 1,
+          "level": "Different function"
+        },
+        "clarifications": [
+          {
+            "requirementId": "r1",
+            "unconfirmedQuote": "Own API integrations and build product health dashboards.",
+            "question": "Can you provide a concrete example of: Own API integrations and build product health dashboards."
+          }
+        ],
+        "conditionState": "clear",
+        "category": "Low priority",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "0 of 1 core requirements fully supported by profile evidence.",
+        "direction": "The product role is a different profession from the explicitly stated engineering career direction. Shared skills do not establish the same function."
+      }
+    },
+    {
+      "personId": "design",
+      "jobId": "design",
+      "status": "supported",
+      "direction": "aligned",
+      "name": "Amina · product designer",
+      "title": "Product Designer",
+      "actual": "supported",
+      "actualDirection": "aligned",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "The job title 'Product Designer' matches the profile goal roles 'Product Designer'. The work content involves conducting user interviews and designing interactive prototypes, which aligns with the profile's stated experience.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "supported",
+            "factId": "f1",
+            "profileQuote": "I conducted user interviews and designed interactive prototypes.",
+            "jobQuote": "Conduct user interviews and design interactive prototypes."
+          }
+        ]
+      },
+      "classification": {
+        "levelReview": {
+          "status": "not-specified",
+          "label": null,
+          "text": "The listing does not establish a level requirement. Confirm scope with the employer.",
+          "requirementIds": []
+        },
+        "evidenceFit": {
+          "full": 1,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 0,
+          "total": 1,
+          "level": "Full evidence"
+        },
+        "clarifications": [],
+        "conditionState": "clear",
+        "category": "Worth reviewing",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "1 of 1 core requirements fully supported by profile evidence.",
+        "direction": "The job title 'Product Designer' matches the profile goal roles 'Product Designer'. The work content involves conducting user interviews and designing interactive prototypes, which aligns with the profile's stated experience."
+      }
+    },
+    {
+      "personId": "design",
+      "jobId": "api",
+      "status": "unknown",
+      "direction": "different",
+      "name": "Amina · product designer",
+      "title": "Platform Product Manager",
+      "actual": "unknown",
+      "actualDirection": "different",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "different",
+        "directionReason": "The product role is a different profession from the explicitly stated design career direction. Shared skills do not establish the same function.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "unknown",
+            "factId": null,
+            "profileQuote": null,
+            "jobQuote": "Own API integrations and build product health dashboards."
+          }
+        ]
+      },
+      "classification": {
+        "levelReview": {
+          "status": "not-specified",
+          "label": null,
+          "text": "The listing does not establish a level requirement. Confirm scope with the employer.",
+          "requirementIds": []
+        },
+        "evidenceFit": {
+          "full": 0,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 1,
+          "total": 1,
+          "level": "Different function"
+        },
+        "clarifications": [
+          {
+            "requirementId": "r1",
+            "unconfirmedQuote": "Own API integrations and build product health dashboards.",
+            "question": "Can you provide a concrete example of: Own API integrations and build product health dashboards."
+          }
+        ],
+        "conditionState": "clear",
+        "category": "Low priority",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "0 of 1 core requirements fully supported by profile evidence.",
+        "direction": "The product role is a different profession from the explicitly stated design career direction. Shared skills do not establish the same function."
+      }
+    },
+    {
+      "personId": "switch",
+      "jobId": "finance",
+      "status": "supported",
+      "direction": "aligned",
+      "name": "Tom · finance-to-product transition",
+      "title": "Payments Product Manager",
+      "actual": "supported",
+      "actualDirection": "aligned",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "supported",
+            "factId": "f1",
+            "profileQuote": "I owned payment reconciliation and settlement as a finance operations analyst.",
+            "jobQuote": "Own payment reconciliation and settlement."
+          }
+        ]
+      },
+      "classification": {
+        "levelReview": {
+          "status": "not-specified",
+          "label": null,
+          "text": "The listing does not establish a level requirement. Confirm scope with the employer.",
+          "requirementIds": []
+        },
+        "evidenceFit": {
+          "full": 1,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 0,
+          "total": 1,
+          "level": "Full evidence"
+        },
+        "clarifications": [],
+        "conditionState": "clear",
+        "category": "Worth reviewing",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "1 of 1 core requirements fully supported by profile evidence.",
+        "direction": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately."
+      }
+    },
+    {
+      "personId": "switch",
+      "jobId": "api",
+      "status": "unknown",
+      "direction": "aligned",
+      "name": "Tom · finance-to-product transition",
+      "title": "Platform Product Manager",
+      "actual": "unknown",
+      "actualDirection": "aligned",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "unknown",
+            "factId": null,
+            "profileQuote": null,
+            "jobQuote": "Own API integrations and build product health dashboards."
+          }
+        ]
+      },
+      "classification": {
+        "levelReview": {
+          "status": "not-specified",
+          "label": null,
+          "text": "The listing does not establish a level requirement. Confirm scope with the employer.",
+          "requirementIds": []
+        },
+        "evidenceFit": {
+          "full": 0,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 1,
+          "total": 1,
+          "level": "Unconfirmed"
+        },
+        "clarifications": [
+          {
+            "requirementId": "r1",
+            "unconfirmedQuote": "Own API integrations and build product health dashboards.",
+            "question": "Can you provide a concrete example of: Own API integrations and build product health dashboards."
+          }
+        ],
+        "conditionState": "clear",
+        "category": "Conditional",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "0 of 1 core requirements fully supported by profile evidence.",
+        "direction": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately."
+      }
+    },
+    {
+      "personId": "junior",
+      "jobId": "growth",
+      "status": "partial",
+      "direction": "aligned",
+      "name": "Sofia · junior product manager",
+      "title": "Growth Product Manager",
+      "pass": false,
+      "error": "Provider or evidence validation unavailable."
+    },
+    {
+      "personId": "junior",
+      "jobId": "legacy",
+      "status": "unknown",
+      "direction": "aligned",
+      "name": "Sofia · junior product manager",
+      "title": "Platform Product Manager",
+      "actual": "unknown",
+      "actualDirection": "aligned",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "unknown",
+            "factId": null,
+            "profileQuote": null,
+            "jobQuote": "Lead incremental migration of a telecom monolith into billing and ordering services."
+          }
+        ]
+      },
+      "classification": {
+        "levelReview": {
+          "status": "not-specified",
+          "label": null,
+          "text": "The listing does not establish a level requirement. Confirm scope with the employer.",
+          "requirementIds": []
+        },
+        "evidenceFit": {
+          "full": 0,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 1,
+          "total": 1,
+          "level": "Unconfirmed"
+        },
+        "clarifications": [
+          {
+            "requirementId": "r1",
+            "unconfirmedQuote": "Lead incremental migration of a telecom monolith into billing and ordering services.",
+            "question": "Can you provide a concrete example of: Lead incremental migration of a telecom monolith into billing and ordering services."
+          }
+        ],
+        "conditionState": "clear",
+        "category": "Conditional",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "0 of 1 core requirements fully supported by profile evidence.",
+        "direction": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately."
+      }
+    },
+    {
+      "personId": "legacy",
+      "jobId": "legacy",
+      "status": "supported",
+      "direction": "aligned",
+      "name": "Alex · telecom platform leader",
+      "title": "Platform Product Manager",
+      "actual": "supported",
+      "actualDirection": "aligned",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "supported",
+            "factId": "f1",
+            "profileQuote": "I led incremental migration of a telecom monolith into billing and ordering services.",
+            "jobQuote": "Lead incremental migration of a telecom monolith into billing and ordering services."
+          }
+        ]
+      },
+      "classification": {
+        "levelReview": {
+          "status": "not-specified",
+          "label": null,
+          "text": "The listing does not establish a level requirement. Confirm scope with the employer.",
+          "requirementIds": []
+        },
+        "evidenceFit": {
+          "full": 1,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 0,
+          "total": 1,
+          "level": "Full evidence"
+        },
+        "clarifications": [],
+        "conditionState": "clear",
+        "category": "Worth reviewing",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "1 of 1 core requirements fully supported by profile evidence.",
+        "direction": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately."
+      }
+    },
+    {
+      "personId": "legacy",
+      "jobId": "api",
+      "status": "supported",
+      "direction": "aligned",
+      "name": "Alex · telecom platform leader",
+      "title": "Platform Product Manager",
+      "actual": "supported",
+      "actualDirection": "aligned",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "supported",
+            "factId": "f2",
+            "profileQuote": "I owned API integrations and built product health dashboards.",
+            "jobQuote": "Own API integrations and build product health dashboards."
+          }
+        ]
+      },
+      "classification": {
+        "levelReview": {
+          "status": "not-specified",
+          "label": null,
+          "text": "The listing does not establish a level requirement. Confirm scope with the employer.",
+          "requirementIds": []
+        },
+        "evidenceFit": {
+          "full": 1,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 0,
+          "total": 1,
+          "level": "Full evidence"
+        },
+        "clarifications": [],
+        "conditionState": "clear",
+        "category": "Worth reviewing",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "1 of 1 core requirements fully supported by profile evidence.",
+        "direction": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately."
+      }
+    },
+    {
+      "personId": "juniorTenure",
+      "jobId": "senior",
+      "status": "unknown",
+      "direction": "aligned",
+      "requirementId": "r2",
+      "expectedCategory": "Conditional",
+      "name": "Nina · one year in product",
+      "title": "Senior Product Manager",
+      "actual": "unknown",
+      "actualDirection": "aligned",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "supported",
+            "factId": "api",
+            "profileQuote": "I own API integrations.",
+            "jobQuote": "Own API integrations."
+          },
+          {
+            "requirementId": "r2",
+            "status": "unknown",
+            "factId": null,
+            "profileQuote": null,
+            "jobQuote": "At least 5 years of"
+          }
+        ]
+      },
+      "classification": {
+        "levelReview": {
+          "status": "unconfirmed",
+          "label": "Senior",
+          "text": "Senior title. Role level is unconfirmed. Review required tenure, scope and decision authority; a supported skill alone does not establish seniority.",
+          "requirementIds": [
+            "r2"
+          ]
+        },
+        "evidenceFit": {
+          "full": 1,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 1,
+          "total": 2,
+          "level": "Partial evidence"
+        },
+        "clarifications": [
+          {
+            "requirementId": "r2",
+            "unconfirmedQuote": "At least 5 years of product management experience.",
+            "question": "Can you provide a concrete example of: At least 5 years of product management experience."
+          }
+        ],
+        "conditionState": "clear",
+        "category": "Conditional",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "1 of 2 core requirements fully supported by profile evidence.",
+        "direction": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately."
+      }
+    },
+    {
+      "personId": "experienced",
+      "jobId": "senior",
+      "status": "supported",
+      "direction": "aligned",
+      "requirementId": "r2",
+      "expectedCategory": "Worth reviewing",
+      "name": "Sam · seven years in product",
+      "title": "Senior Product Manager",
+      "actual": "supported",
+      "actualDirection": "aligned",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "supported",
+            "factId": "api",
+            "profileQuote": "I own API integrations.",
+            "jobQuote": "Own API integrations."
+          },
+          {
+            "requirementId": "r2",
+            "status": "supported",
+            "factId": "years",
+            "profileQuote": "I have 7 years of product management experience.",
+            "jobQuote": "At least 5 years of product management experience."
+          }
+        ]
+      },
+      "classification": {
+        "levelReview": {
+          "status": "stated-scope-evidenced",
+          "label": "Senior",
+          "text": "Evidence supports the stated experience or management requirements. Overall level and decision authority still need employer review.",
+          "requirementIds": [
+            "r2"
+          ]
+        },
+        "evidenceFit": {
+          "full": 2,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 0,
+          "total": 2,
+          "level": "Full evidence"
+        },
+        "clarifications": [],
+        "conditionState": "clear",
+        "category": "Worth reviewing",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "2 of 2 core requirements fully supported by profile evidence.",
+        "direction": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately."
+      }
+    },
+    {
+      "personId": "operations",
+      "jobId": "senior",
+      "status": "unknown",
+      "direction": "aligned",
+      "requirementId": "r2",
+      "expectedCategory": "Conditional",
+      "name": "Robin · seven years in finance operations",
+      "title": "Senior Product Manager",
+      "actual": "unknown",
+      "actualDirection": "aligned",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "supported",
+            "factId": "api",
+            "profileQuote": "I own API integrations.",
+            "jobQuote": "Own API integrations."
+          },
+          {
+            "requirementId": "r2",
+            "status": "unknown",
+            "factId": null,
+            "profileQuote": null,
+            "jobQuote": "At least 5 years of product management experience."
+          }
+        ]
+      },
+      "classification": {
+        "levelReview": {
+          "status": "unconfirmed",
+          "label": "Senior",
+          "text": "Senior title. Role level is unconfirmed. Review required tenure, scope and decision authority; a supported skill alone does not establish seniority.",
+          "requirementIds": [
+            "r2"
+          ]
+        },
+        "evidenceFit": {
+          "full": 1,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 1,
+          "total": 2,
+          "level": "Partial evidence"
+        },
+        "clarifications": [
+          {
+            "requirementId": "r2",
+            "unconfirmedQuote": "At least 5 years of product management experience.",
+            "question": "Can you provide a concrete example of: At least 5 years of product management experience."
+          }
+        ],
+        "conditionState": "clear",
+        "category": "Conditional",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "1 of 2 core requirements fully supported by profile evidence.",
+        "direction": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately."
+      }
+    }
+  ],
+  "limit": "Small authored synthetic set; not market accuracy or human acceptance."
+}

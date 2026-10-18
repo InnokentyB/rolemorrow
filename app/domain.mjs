@@ -1,3 +1,4 @@
+import {levelReview} from './role-fit.mjs';
 import {evidenceSummary} from '../public/matching.js';
 import {createHash,randomUUID} from 'node:crypto';
 // Full country/territory names recognized by the local ICU database. Region groups
@@ -112,7 +113,7 @@ export function classify(job,assessment,profile,context={}){
   preferenceNotes.push(`Salary target: ${prefs.salary.currency} ${prefs.salary.targetMin.toLocaleString('en')}–${prefs.salary.targetMax.toLocaleString('en')} gross/year for ${prefs.salary.country} (${prefs.salary.basis==='base'?'fixed base':prefs.salary.basis==='total'?'total cash':'pay basis to clarify'}). ${prefs.salary.policy==='pending'?'Below-target policy is not confirmed.':prefs.salary.policy==='soft'?'Below-target pay lowers preference, not eligibility.':'Only verified comparable annual base ranges can enforce this policy.'}`);}
  const evidenceFit=evidenceSummary(job,assessment);
  const clarifications=coreRows.filter(r=>r.status!=='supported').map(r=>{const requirement=core.find(q=>q.id===r.requirementId);const unconfirmedQuote=r.status==='partial'?r.unconfirmedQuote:requirement.text;return {requirementId:r.requirementId,unconfirmedQuote,question:`Can you provide a concrete example of: ${unconfirmedQuote}`};});
- return {evidenceFit,clarifications,conditionState:mismatch?'conflict':unknown?'unconfirmed':'clear',category,preferenceBand,preferenceNotes,intakeQuestions:intakeQuestions(profile),constraints:notes.join(' '),experience:`${supported} of ${coreRows.length} core requirements fully supported by profile evidence.${evidenceFit.partial?` ${evidenceFit.partial} partially supported; review the missing clauses.`:''}`,direction:assessment.directionReason};
+ return {levelReview:levelReview(job,assessment),evidenceFit,clarifications,conditionState:mismatch?'conflict':unknown?'unconfirmed':'clear',category,preferenceBand,preferenceNotes,intakeQuestions:intakeQuestions(profile),constraints:notes.join(' '),experience:`${supported} of ${coreRows.length} core requirements fully supported by profile evidence.${evidenceFit.partial?` ${evidenceFit.partial} partially supported; review the missing clauses.`:''}`,direction:assessment.directionReason};
 }
 
 function comparableSalary(raw){

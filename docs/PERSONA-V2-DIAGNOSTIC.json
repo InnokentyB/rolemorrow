@@ -1,0 +1,30 @@
+{
+  "mode": "Separate diagnostic retry, actual inference; original failure retained",
+  "syntheticOnly": true,
+  "observations": [
+    {
+      "call": 1,
+      "content": "{\"direction\": \"aligned\", \"directionReason\": \"The job title 'Growth Product Manager' aligns with the profile goal role 'Product Manager' as it represents a specialization within the same profession.\", \"rows\": [{\"requirementId\": \"r1\", \"status\": \"partial\", \"factId\": \"f1\", \"profileQuote\": \"I ran A/B tests for one checkout feature.\", \"jobQuote\": \"Run A/B tests\", \"unconfirmedQuote\": \"establish an organization-wide experimentation culture\"}]}"
+    },
+    {
+      "call": 2,
+      "content": "{\"reviews\": [{\"requirementId\": \"r1\", \"reason\": \"The fact 'I ran A/B tests for one checkout feature.' directly demonstrates the ability to run A/B tests, satisfying the jobQuote clause 'Run A/B tests'. It does not provide evidence for establishing an organization-wide experimentation culture, which remains unconfirmed.\", \"supported\": true, \"partialEvidence\": null}]}"
+    },
+    {
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "partial",
+            "factId": "f1",
+            "profileQuote": "I ran A/B tests for one checkout feature.",
+            "jobQuote": "Run A/B tests",
+            "unconfirmedQuote": "establish an organization-wide experimentation culture"
+          }
+        ]
+      }
+    }
+  ]
+}
