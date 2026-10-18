@@ -1,0 +1,20 @@
+name: rolemorrow-browser-checks
+services:
+  browser:
+    build:
+      context: .
+      dockerfile: Dockerfile.browser
+    platform: linux/amd64
+    init: true
+    network_mode: none
+    cpus: 2.0
+    mem_limit: 2g
+    pids_limit: 512
+    shm_size: 256m
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+      - seccomp:./browser-seccomp.json
+    logging:
+      driver: json-file
+      options: {max-size: '10m', max-file: '2'}

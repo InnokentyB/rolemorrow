@@ -1,0 +1,292 @@
+{
+  "checkedAt": "2026-10-18T11:30:01.052Z",
+  "benchmarkVersion": "platform-bank-2026-10-18-v1",
+  "evidencePolicy": "2026-10-18-partial-ranking-v1",
+  "syntheticOnly": true,
+  "mode": "actual Nebius inference",
+  "model": "nvidia/nemotron-3-super-120b-a12b",
+  "cases": 6,
+  "passed": 6,
+  "falseSupported": 0,
+  "falseNegative": 0,
+  "results": [
+    {
+      "profileId": "api",
+      "jobId": "a",
+      "expected": "partial",
+      "actual": "partial",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "partial",
+            "factId": "api",
+            "profileQuote": "I own API integrations.",
+            "jobQuote": "Own API integrations",
+            "unconfirmedQuote": "build product health dashboards"
+          }
+        ]
+      },
+      "classification": {
+        "evidenceFit": {
+          "full": 0,
+          "partial": 1,
+          "gaps": 0,
+          "unknown": 0,
+          "total": 1,
+          "level": "Partial evidence"
+        },
+        "clarifications": [
+          {
+            "requirementId": "r1",
+            "unconfirmedQuote": "build product health dashboards",
+            "question": "Can you provide a concrete example of: build product health dashboards"
+          }
+        ],
+        "conditionState": "clear",
+        "category": "Conditional",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "0 of 1 core requirements fully supported by profile evidence. 1 partially supported; review the missing clauses.",
+        "direction": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately."
+      }
+    },
+    {
+      "profileId": "platform",
+      "jobId": "a",
+      "expected": "supported",
+      "actual": "supported",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "supported",
+            "factId": "platform",
+            "profileQuote": "I own API integrations and build product health dashboards.",
+            "jobQuote": "Own API integrations and build product health dashboards."
+          }
+        ]
+      },
+      "classification": {
+        "evidenceFit": {
+          "full": 1,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 0,
+          "total": 1,
+          "level": "Full evidence"
+        },
+        "clarifications": [],
+        "conditionState": "clear",
+        "category": "Worth reviewing",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "1 of 1 core requirements fully supported by profile evidence.",
+        "direction": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately."
+      }
+    },
+    {
+      "profileId": "finance",
+      "jobId": "a",
+      "expected": "unknown",
+      "actual": "unknown",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "unknown",
+            "factId": null,
+            "profileQuote": null,
+            "jobQuote": "Own API integrations and build product health dashboards."
+          }
+        ]
+      },
+      "classification": {
+        "evidenceFit": {
+          "full": 0,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 1,
+          "total": 1,
+          "level": "Unconfirmed"
+        },
+        "clarifications": [
+          {
+            "requirementId": "r1",
+            "unconfirmedQuote": "Own API integrations and build product health dashboards.",
+            "question": "Can you provide a concrete example of: Own API integrations and build product health dashboards."
+          }
+        ],
+        "conditionState": "clear",
+        "category": "Conditional",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "0 of 1 core requirements fully supported by profile evidence.",
+        "direction": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately."
+      }
+    },
+    {
+      "profileId": "finance",
+      "jobId": "b",
+      "expected": "supported",
+      "actual": "supported",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "supported",
+            "factId": "finance",
+            "profileQuote": "I work with Finance and Risk on settlement.",
+            "jobQuote": "Work with Finance and Risk on settlement."
+          }
+        ]
+      },
+      "classification": {
+        "evidenceFit": {
+          "full": 1,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 0,
+          "total": 1,
+          "level": "Full evidence"
+        },
+        "clarifications": [],
+        "conditionState": "clear",
+        "category": "Worth reviewing",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "1 of 1 core requirements fully supported by profile evidence.",
+        "direction": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately."
+      }
+    },
+    {
+      "profileId": "api",
+      "jobId": "b",
+      "expected": "unknown",
+      "actual": "unknown",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "aligned",
+        "directionReason": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "unknown",
+            "factId": null,
+            "profileQuote": null,
+            "jobQuote": "Work with Finance and Risk on settlement."
+          }
+        ]
+      },
+      "classification": {
+        "evidenceFit": {
+          "full": 0,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 1,
+          "total": 1,
+          "level": "Unconfirmed"
+        },
+        "clarifications": [
+          {
+            "requirementId": "r1",
+            "unconfirmedQuote": "Work with Finance and Risk on settlement.",
+            "question": "Can you provide a concrete example of: Work with Finance and Risk on settlement."
+          }
+        ],
+        "conditionState": "clear",
+        "category": "Conditional",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "0 of 1 core requirements fully supported by profile evidence.",
+        "direction": "The job title matches the Product Manager career direction. Requirement evidence is assessed separately."
+      }
+    },
+    {
+      "profileId": "api",
+      "jobId": "c",
+      "expected": "supported",
+      "actual": "supported",
+      "pass": true,
+      "falseSupported": false,
+      "falseNegative": false,
+      "assessment": {
+        "direction": "different",
+        "directionReason": "The job title 'Frontend Engineer' and core responsibility 'Own API integrations' represent engineering work, which does not align with the profile goal role of 'Product Manager'. These are distinct professions with different primary responsibilities.",
+        "rows": [
+          {
+            "requirementId": "r1",
+            "status": "supported",
+            "factId": "api",
+            "profileQuote": "I own API integrations.",
+            "jobQuote": "Own API integrations."
+          }
+        ]
+      },
+      "classification": {
+        "evidenceFit": {
+          "full": 1,
+          "partial": 0,
+          "gaps": 0,
+          "unknown": 0,
+          "total": 1,
+          "level": "Different function"
+        },
+        "clarifications": [],
+        "conditionState": "clear",
+        "category": "Low priority",
+        "preferenceBand": "Neutral",
+        "preferenceNotes": [],
+        "intakeQuestions": [
+          "Add your career priorities, relocation options and salary preferences when ready."
+        ],
+        "constraints": "Country stated: Portugal. Employment/payroll setup still needs employer confirmation.",
+        "experience": "1 of 1 core requirements fully supported by profile evidence.",
+        "direction": "The job title 'Frontend Engineer' and core responsibility 'Own API integrations' represent engineering work, which does not align with the profile goal role of 'Product Manager'. These are distinct professions with different primary responsibilities."
+      }
+    }
+  ],
+  "limit": "Small fixed acceptance set, not a statistical accuracy estimate or a human UAT verdict."
+}

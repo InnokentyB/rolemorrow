@@ -61,3 +61,11 @@ Q11 verifies the request configuration for the final claim auditor: Nemotron rea
 
 
 Final manual review also found a scoring/explainability overclaim and a Product Engineer title collision. Q12 rejects quality gates as proof of explainability while retaining explicit explainability evidence. Q13 distinguishes Product Engineer from the stated PM goal. Release policy is now `2026-10-18-reviewed-evidence-v4` with 82 deterministic checks; earlier v2/v3 runs remain dated evidence, not acceptance of this revision. The five-role review covered onboarding, platform, merchant analytics, telematics and payments/finance. It exposed defects to correct; it is not recorded as owner acceptance or a statistical accuracy benchmark.
+
+## Platform acceptance increment, 2026-10-18
+
+Supersedes the previous 82-check engineering count: 95 deterministic checks passed, including a frozen 3-profile × 5-vacancy matrix and exact partial-clause validation. Eight browser scripts passed on Linux amd64 in sandboxed Chromium with no network or personal volume. The journey includes cancellation, failure/retry, persistence, packet export and unsent test correspondence.
+
+A six-case actual Nebius check initially found a false negative: full support proposed by the first model was discarded instead of retaining a supported clause. A RED regression preceded the reviewer downgrade fix. The final fixed-set run passed 6/6, with zero false full-support and zero false negatives in that subset; per-case evidence, model and policy are in QUALITY-LIVE.json. No claim of general matching accuracy follows from six cases. Human semantic acceptance remains pending.
+
+The scoped independent UI finish review passed without material P0/P1 findings. The design detector used degraded regex fallback; computed contrast and assistive-technology behavior were not independently verified.

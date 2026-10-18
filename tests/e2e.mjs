@@ -1,4 +1,4 @@
-import {chromium} from 'playwright';
+import {chromium} from './browser.mjs';
 import assert from 'node:assert/strict';
 import {mkdtemp,mkdir} from 'node:fs/promises';
 import {tmpdir} from 'node:os';import {join} from 'node:path';
@@ -22,7 +22,7 @@ try{
  await page.getByText('AI product evaluation',{exact:true}).waitFor();
  await page.reload();await page.getByRole('heading',{name:'Senior Product Manager',exact:true}).waitFor();
  await page.getByRole('button',{name:'Profile & goal',exact:true}).click();await page.getByLabel('Target roles').fill('Director');await page.getByRole('button',{name:'Save profile',exact:true}).click();
- await page.getByRole('button',{name:'Results',exact:true}).click();await page.getByText('Inputs changed. Run a new check before using these recommendations.').waitFor();
+ await page.getByRole('button',{name:'Results',exact:true}).click();await page.getByText('Inputs or assessment rules changed. Run a new check before using these recommendations.').waitFor();
  // T22: narrow layout and keyboard path, no overflow.
  await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Profile & goal',exact:true}).click();
  await page.getByLabel('Target roles').focus();await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>document.activeElement.id),'industries');

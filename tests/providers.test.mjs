@@ -23,7 +23,7 @@ test('safe fetch bounds response and returns final evidence',async()=>{
  await assert.rejects(safeFetch('https://example.com',{...opts,maxBytes:2}));
 });
 test('default providers remain fictional and evidence anchored',async()=>{
- const p=getProviders({env:{}});const d=await p.discover(companies[0]);assert.equal(d.jobs.length,1);
+ const p=getProviders({env:{}});const d=await p.discover(companies[0]);assert.equal(d.jobs.length,2);
  const a=await p.assess(d.jobs[0],profile);assert.equal(a.rows[0].factId,'f1');
  const f=createFixtureProviders();assert.equal((await f.discover({...companies[0],name:'Fieldwork'})).jobs[0].countries.length,0);
 });
@@ -249,4 +249,24 @@ test('Q12 production quality gates alone do not establish explainability',async(
 test('Q13 product engineering is distinct from a Product Manager goal',async()=>{
  const p=getProviders({env:liveEnv,transport:async()=>({text:JSON.stringify({choices:[{message:{content:JSON.stringify({direction:'aligned',directionReason:'Overbroad product match',rows:[{requirementId:'r1',status:'unknown',factId:null,profileQuote:null,jobQuote:'Build products.'}]})}}]})})});
  assert.equal((await p.assess({title:'Senior Product Engineer, R&D',requirements:[{id:'r1',text:'Build products.',core:true}]},profile)).direction,'different');
+});
+
+test('PP01 partial proposals are independently verified against the claimed clause',async()=>{
+ let reviewed=0,payload;const text='Write SQL queries and use Snowflake.';
+ const p=createProviders({env:liveEnv,verifyEvidence:async(_j,_p,a)=>{reviewed++;return a.rows.map(r=>r.requirementId);},transport:async(_url,opts)=>{payload=JSON.parse(opts.body);return {text:JSON.stringify({choices:[{message:{content:JSON.stringify({direction:'aligned',directionReason:'Same role',rows:[{requirementId:'r1',status:'partial',factId:'sql',profileQuote:'I write SQL queries.',jobQuote:'Write SQL queries',unconfirmedQuote:'use Snowflake'}]})}}]})};}});
+ const a=await p.assess({title:'Product Manager',requirements:[{id:'r1',text,core:true}]},{...profile,facts:[{id:'sql',text:'I write SQL queries.'}]});
+ assert.equal(a.rows[0].status,'partial');assert.equal(reviewed,1);assert.ok(payload.response_format.json_schema.schema.properties.rows.items.properties.status.enum.includes('partial'));
+});
+test('PP02 failed partial support is downgraded without retaining a fact or missing-span claim',async()=>{
+ const text='Own APIs and build dashboards.';const p=createProviders({env:liveEnv,verifyEvidence:async()=>[],transport:async()=>({text:JSON.stringify({choices:[{message:{content:JSON.stringify({direction:'aligned',directionReason:'Same role',rows:[{requirementId:'r1',status:'partial',factId:'f1',profileQuote:'AI product evaluation',jobQuote:'Own APIs',unconfirmedQuote:'build dashboards'}]})}}]})})});
+ const a=await p.assess({title:'Product Manager',requirements:[{id:'r1',text,core:true}]},profile);assert.equal(a.rows[0].status,'unknown');assert.equal(a.rows[0].factId,null);assert.equal(a.rows[0].unconfirmedQuote,undefined);
+});
+test('PP03 running individual experiments is not proof of establishing an experiment culture',async()=>{
+ const text='You have built experiment cultures, not just run individual tests.';const quote='I ran product experiments and release tests.';const p=getProviders({env:liveEnv,transport:async()=>({text:JSON.stringify({choices:[{message:{content:JSON.stringify({direction:'aligned',directionReason:'Same role',rows:[{requirementId:'r1',status:'supported',factId:'experiment',profileQuote:quote,jobQuote:text}]})}}]})})});assert.equal((await p.assess({title:'Product Manager',requirements:[{id:'r1',text,core:true}]},{...profile,facts:[{id:'experiment',text:quote}]})).rows[0].status,'unknown');
+});
+test('PP04 independent audit can downgrade a full proposal to a validated partial claim',async()=>{
+ let calls=0;const text='Own API integrations and build product health dashboards.';const p=createProviders({env:liveEnv,transport:async()=>({text:JSON.stringify({choices:[{message:{content:JSON.stringify(++calls===1?{direction:'aligned',directionReason:'Same role',rows:[{requirementId:'r1',status:'supported',factId:'api',profileQuote:'I own API integrations.',jobQuote:'Own API integrations'}]}:{reviews:[{requirementId:'r1',reason:'API ownership is explicit; dashboards are not.',supported:false,partialEvidence:{jobQuote:'Own API integrations',unconfirmedQuote:'build product health dashboards'}}]})}}]})})});const a=await p.assess({title:'Product Manager',requirements:[{id:'r1',text,core:true}]},{...profile,facts:[{id:'api',text:'I own API integrations.'}]});assert.equal(a.rows[0].status,'partial');assert.equal(a.rows[0].unconfirmedQuote,'build product health dashboards');
+});
+test('PD01 fictional demo exposes full, partial and unconfirmed evidence without providers',async()=>{
+ const p=createFixtureProviders();const statuses=[];for(const company of companies){const d=await p.discover(company);for(const j of d.jobs){const a=await p.assess(j,profile);statuses.push(...a.rows.map(r=>r.status));}}assert.ok(statuses.includes('supported'));assert.ok(statuses.includes('partial'));assert.ok(statuses.includes('unknown'));
 });

@@ -1,3 +1,4 @@
+import {evidenceSummary} from '../public/matching.js';
 import {createHash,randomUUID} from 'node:crypto';
 // Full country/territory names recognized by the local ICU database. Region groups
 // deliberately remain unknown: a regional remote policy does not prove payroll eligibility.
@@ -65,12 +66,17 @@ export function validateAssessment(a,job,profile){
  if(!a||!['aligned','uncertain','different'].includes(a.direction)||typeof a.directionReason!=='string'||a.directionReason.length>1200||!Array.isArray(a.rows)||a.rows.length!==job.requirements.length)fail();
  const seen=new Set();const rows=a.rows.map(row=>{
   const req=job.requirements.find(r=>r.id===row.requirementId);
-  if(!req||seen.has(req.id)||!['supported','gap','unknown'].includes(row.status)||typeof row.jobQuote!=='string'||!row.jobQuote.trim()||!req.text.includes(row.jobQuote))fail();seen.add(req.id);
-  if(row.status==='supported'){
+  if(!req||seen.has(req.id)||!['supported','partial','gap','unknown'].includes(row.status)||typeof row.jobQuote!=='string'||!row.jobQuote.trim()||!req.text.includes(row.jobQuote))fail();seen.add(req.id);
+  if(row.status==='supported'||row.status==='partial'){
    const fact=profile.facts.find(f=>f.id===row.factId);
    if(!fact||typeof row.profileQuote!=='string'||!row.profileQuote.trim()||!fact.text.includes(row.profileQuote))fail();
   }else if(row.factId!=null||row.profileQuote!=null)fail();
-  return {requirementId:req.id,status:row.status,factId:row.factId??null,profileQuote:row.profileQuote??null,jobQuote:row.jobQuote};
+  if(row.status==='partial'){
+   const missing=row.unconfirmedQuote;const start=req.text.indexOf(row.jobQuote),end=start+row.jobQuote.length;
+   if(typeof missing!=='string'||!missing.trim()||!req.text.includes(missing)||row.jobQuote===req.text||missing===req.text||(row.jobQuote.match(/\p{L}/gu)??[]).length<2||(missing.match(/\p{L}/gu)??[]).length<2||/^(?:and|or|with|the|of|to|an)$/i.test(row.jobQuote.trim())||/^(?:and|or|with|the|of|to|an)$/i.test(missing.trim()))fail();
+   const missingStart=req.text.indexOf(missing);if(start<missingStart+missing.length&&missingStart<end)fail();
+  }else if(row.unconfirmedQuote!=null)fail();
+  return {requirementId:req.id,status:row.status,factId:row.factId??null,profileQuote:row.profileQuote??null,jobQuote:row.jobQuote,...(row.status==='partial'?{unconfirmedQuote:row.unconfirmedQuote}:{})};
  });return {direction:a.direction,directionReason:a.directionReason,rows};
 }
 export function classify(job,assessment,profile,context={}){
@@ -104,7 +110,9 @@ export function classify(job,assessment,profile,context={}){
   else if(target.basis==='base'&&published&&published.currency===target.currency&&countries.includes(target.country.toLowerCase())&&published.max<target.targetMin){preferenceNotes.push('Published comparable annual base salary is below your country-specific target.');if(target.policy==='soft')preferenceBand='Lower preference';if(target.policy==='hard')category='Low priority';}
   else if(target.basis!=='base'||!published||published.currency!==target.currency)preferenceNotes.push('Salary currency, annual period or base-pay basis is not comparable; no automatic penalty.');
   preferenceNotes.push(`Salary target: ${prefs.salary.currency} ${prefs.salary.targetMin.toLocaleString('en')}–${prefs.salary.targetMax.toLocaleString('en')} gross/year for ${prefs.salary.country} (${prefs.salary.basis==='base'?'fixed base':prefs.salary.basis==='total'?'total cash':'pay basis to clarify'}). ${prefs.salary.policy==='pending'?'Below-target policy is not confirmed.':prefs.salary.policy==='soft'?'Below-target pay lowers preference, not eligibility.':'Only verified comparable annual base ranges can enforce this policy.'}`);}
- return {category,preferenceBand,preferenceNotes,intakeQuestions:intakeQuestions(profile),constraints:notes.join(' '),experience:`${supported} of ${coreRows.length} core requirements supported by profile evidence.`,direction:assessment.directionReason};
+ const evidenceFit=evidenceSummary(job,assessment);
+ const clarifications=coreRows.filter(r=>r.status!=='supported').map(r=>{const requirement=core.find(q=>q.id===r.requirementId);const unconfirmedQuote=r.status==='partial'?r.unconfirmedQuote:requirement.text;return {requirementId:r.requirementId,unconfirmedQuote,question:`Can you provide a concrete example of: ${unconfirmedQuote}`};});
+ return {evidenceFit,clarifications,conditionState:mismatch?'conflict':unknown?'unconfirmed':'clear',category,preferenceBand,preferenceNotes,intakeQuestions:intakeQuestions(profile),constraints:notes.join(' '),experience:`${supported} of ${coreRows.length} core requirements fully supported by profile evidence.${evidenceFit.partial?` ${evidenceFit.partial} partially supported; review the missing clauses.`:''}`,direction:assessment.directionReason};
 }
 
 function comparableSalary(raw){

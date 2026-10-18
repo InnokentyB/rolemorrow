@@ -1,10 +1,11 @@
-import {chromium} from 'playwright';
+import {chromium} from './browser.mjs';
 import assert from 'node:assert/strict';
 import {mkdtemp,readFile} from 'node:fs/promises';import {tmpdir} from 'node:os';import {join} from 'node:path';
 import {createServer} from '../app/server.mjs';import {getProviders} from '../app/providers.mjs';
 const dir=await mkdtemp(join(tmpdir(),'career-ats-'));
 const env={ALLOW_LIVE:'1',NEBIUS_API_KEY:'test-only',TAVILY_API_KEY:'test-only',NEBIUS_MODEL:'nvidia/test-only'};
-const adapter=getProviders({env,transport:async(url,opts={})=>{
+// Named deterministic semantic-review adapter; real model quality is tested separately.
+const adapter=getProviders({env,reviewRequirements:async j=>j.requirements.map(r=>r.id),verifyEvidence:async(_j,_p,a)=>a.rows.filter(r=>['supported','partial'].includes(r.status)).map(r=>r.requirementId),transport:async(url,opts={})=>{
  if(url.includes('tavily.com'))return {text:'{"results":[]}'};
  if(url.includes('tokenfactory')){const extraction=JSON.parse(opts.body).messages[0].content.includes('Extract');return {text:JSON.stringify({choices:[{message:{content:JSON.stringify(extraction?{jobs:[{id:'pm',title:'Lead AI Product Manager',countries:['Portugal'],workMode:'remote',salary:null,requirements:[{id:'r1',text:'Lead AI product evaluation.',core:true}]}]}:{direction:'aligned',directionReason:'Matches Product Manager goal.',rows:[{requirementId:'r1',status:'supported',factId:'f1',profileQuote:'AI product evaluation',jobQuote:'Lead AI product evaluation.'}]})}}]})};}
  if(url==='https://employer.example/careers')return {url,text:'<script src="/careers.js"></script>'};

@@ -18,3 +18,9 @@ Decisions use revisions to reject stale concurrent writes. Editing a profile mar
 ## Boundary before public service
 
 Local Host/Origin checks are not user authentication. Before an Internet-accessible service: add authenticated users, server-enforced ownership on every record/file/action, isolated demo sessions, rate/budget limits, durable job queues and storage, tested backup/restore, mail-ingress authentication/replay handling and a retention policy. Do not publish the personal state volume or solve access by removing guards.
+
+## Partial evidence and stable ordering (2026-10-18)
+
+Assessment rows may carry `partial`: exact profile citation, exact matched `jobQuote` and non-overlapping `unconfirmedQuote` from the requirement. Independent review can downgrade full support to partial or unknown; it cannot promote claims. Tool, duration and experiment-culture guards apply after that review. Unknown experience remains unknown rather than a proved gap.
+
+`public/matching.js` is shared by server and browser: category, role alignment, full core fraction, partial core fraction, fewer gaps, conditions, soft preferences, stable identity. Optional requirements cannot increase core coverage. API projection marks historical runs and saved assessments stale when the profile or evidence policy changes; stored snapshots and candidate decisions are preserved. New results carry policy `2026-10-18-partial-ranking-v1`. No new authorization boundary or mail sender was introduced.

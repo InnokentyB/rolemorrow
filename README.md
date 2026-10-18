@@ -79,9 +79,25 @@ docker compose -f compose.checks.yaml build
 docker compose -f compose.checks.yaml run --rm --no-deps checks
 ```
 
-Checks run without network access, runtime secrets or the personal data volume. This release has 82 deterministic logic/API checks. GitHub Actions runs these checks and builds the runtime image; it does not claim browser or live-provider readiness.
+Checks run without network access, runtime secrets or the personal data volume. This release has 95 deterministic logic/API checks, including a frozen matrix of 15 profile/vacancy combinations. Shared server/browser ranking puts role and core evidence before soft preferences. Evidence can be full, partial (with matched and missing clauses), or unconfirmed; it is not a hiring probability. Load the fictional example and check its employers to see all three states without API keys.
 
-Browser scenarios are included in `tests/*-e2e.mjs`, `tests/e2e.mjs` and `tests/browser-cases.mjs`, using isolated temporary stores. They require the pinned Playwright Chromium installation in a reviewed browser environment. Run `npm run test:e2e` there. A browser container must preserve Chromium's sandbox; no unsupported browser-container setup is claimed here. Development browser passes are separate from clean-clone Docker verification and human acceptance.
+The eight browser scripts run with disposable stores and synthetic providers:
+
+```sh
+docker compose -f compose.browser.yaml build browser
+docker compose -f compose.browser.yaml run --rm --no-deps browser
+```
+
+The Linux amd64 browser image uses non-root Chromium with its sandbox enabled, all capabilities dropped and networking disabled during tests. The checked seccomp profile permits the user-namespace sandbox syscalls and chroot; it does not grant container capabilities. Chromium 155 was observed in the verified build; the Debian browser package may receive updates. No ports or persistent browser services are started; temporary containers are removed on exit. Both deterministic and browser jobs run in GitHub Actions. Automated browser checks do not replace human accessibility/usefulness acceptance.
+
+A separate opt-in check makes at most 12 real Nebius inference requests against six frozen synthetic cases (no Tavily discovery):
+
+```sh
+docker compose -f compose.checks.yaml build checks
+docker run --rm --init --cpus=1 --memory=512m --pids-limit=128 --cap-drop=ALL --security-opt=no-new-privileges --read-only --env-file /absolute/private/runtime.env -e CONFIRM_PLATFORM_QUALITY=1 rolemorrow-checks-checks node tests/quality-live.mjs
+```
+
+Keep that environment file outside the checkout; supply only Nebius configuration needed for this workload. Never commit keys or personal state. The latest bounded report is [QUALITY-LIVE.json](docs/QUALITY-LIVE.json): six of six passed, with zero false full-support claims and zero false negatives within this subset. This is not a market accuracy estimate. See [platform acceptance](docs/PLATFORM-ACCEPTANCE.md) for scenarios and verification limits.
 
 ## Limits and next work
 

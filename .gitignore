@@ -9,6 +9,9 @@
 !/package-lock.json
 !/Dockerfile
 !/Dockerfile.checks
+!/Dockerfile.browser
+!/compose.browser.yaml
+!/browser-seccomp.json
 !/compose.yaml
 !/compose.checks.yaml
 !/compose.demo.yaml
@@ -25,6 +28,8 @@
 !/docs/ARCHITECTURE.md
 !/docs/READINESS.md
 !/docs/QUALITY.md
+!/docs/PLATFORM-ACCEPTANCE.md
+!/docs/QUALITY-LIVE.json
 !/docs/SUBMISSION.md
 !/.github/
 !/.github/workflows/

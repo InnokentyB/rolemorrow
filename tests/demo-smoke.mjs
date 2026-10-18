@@ -9,7 +9,7 @@ await call('/api/profile',{facts:[{id:'f1',text:'Led AI product evaluation and A
 await call('/api/companies',{companies:['Northstar','Fieldwork','Meridian'].map(name=>({name,homepage:`https://${name.toLowerCase()}.example`,careers:`https://${name.toLowerCase()}.example/careers`,industry:'AI'}))});
 await call('/api/scans',{mode:'fixture'});
 for(let i=0;i<100;i++){s=await state();if(s.run.status!=='running')break;await new Promise(r=>setTimeout(r,20));}
-assert.equal(s.run.mode,'fixture');assert.equal(s.run.results.length,3);
+assert.equal(s.run.mode,'fixture');assert.equal(s.run.results.length,4);
 assert.deepEqual(new Set(s.run.results.map(r=>r.category)),new Set(['Worth reviewing','Conditional','Low priority']));
 s=await call('/api/opportunities',{resultKey:s.run.results.find(r=>r.category==='Worth reviewing').key,baseRevision:s.revision});const o=s.opportunities[0];
 s=await call('/api/applications/'+o.id,{revision:0,cvVersion:'Fictional demo v1',cvText:'Led AI product evaluation and API platform launches.',coverLetter:'Fictional application for demonstration only.',answers:'Work-country/payroll setup to confirm.',files:[]});

@@ -20,3 +20,9 @@ main{max-width:1440px}.workspace-heading{margin-bottom:24px}.workspace{grid-temp
 @media(max-width:600px){nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 10px;overflow:visible;white-space:normal}nav button{font-size:.8rem;padding:12px 0;min-width:0}}
 
 .interpretation-form{display:grid;gap:10px;margin:16px 0}.interpretation-form label{margin:6px 0 0}.interpretation-form button{justify-self:start}.interpretation-form .text-button{font-size:.85rem}
+
+/* Evidence status stays typographic; uncertainty is part of the worksheet. */
+.evidence-level{font-size:.9rem;font-weight:650;margin:0 0 12px;color:var(--ink)}
+.clarifications{max-width:75ch;margin:0 0 18px}.clarifications ul{padding-left:20px;line-height:1.6;overflow-wrap:anywhere}.clarifications li+li{margin-top:10px}
+
+.result-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
