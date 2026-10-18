@@ -11,6 +11,7 @@
 !/Dockerfile.checks
 !/compose.yaml
 !/compose.checks.yaml
+!/compose.demo.yaml
 !/app/
 !/app/*.mjs
 !/public/
@@ -23,6 +24,8 @@
 !/docs/
 !/docs/ARCHITECTURE.md
 !/docs/READINESS.md
+!/docs/QUALITY.md
+!/docs/SUBMISSION.md
 !/.github/
 !/.github/workflows/
 !/.github/workflows/checks.yml

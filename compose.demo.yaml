@@ -1,0 +1,35 @@
+# Fictional judge test build. Does not load .env or share personal application data.
+name: rolemorrow-demo
+services:
+  demo:
+    build: .
+    platform: linux/amd64
+    init: true
+    environment:
+      PORT: '3027'
+      ALLOW_LIVE: '0'
+    ports:
+      - '127.0.0.1:3028:3027'
+    volumes:
+      - demo-data:/app/data
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    cpus: 1.0
+    mem_limit: 512m
+    pids_limit: 128
+    cap_drop: [ALL]
+    security_opt: ['no-new-privileges:true']
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '2'
+volumes:
+  demo-data:
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: '${ROLEMORROW_DEMO_SUBNET:-10.231.71.0/28}'

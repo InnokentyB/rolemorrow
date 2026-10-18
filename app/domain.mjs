@@ -91,8 +91,8 @@ export function classify(job,assessment,profile,context={}){
  const core=job.requirements.filter(r=>r.core);const coreRows=assessment.rows.filter(r=>core.some(c=>c.id===r.requirementId));
  const supported=coreRows.filter(r=>r.status==='supported').length;
  let category='Worth reviewing';
- if(mismatch||supported===0||assessment.direction==='different')category='Low priority';
- else if(unknown||coreRows.some(r=>r.status!=='supported')||assessment.direction==='uncertain')category='Conditional';
+ if(mismatch||(coreRows.length>0&&coreRows.every(r=>r.status==='gap'))||assessment.direction==='different')category='Low priority';
+ else if(unknown||supported===0||coreRows.some(r=>r.status!=='supported')||assessment.direction==='uncertain')category='Conditional';
  let preferenceBand='Neutral';
  if(prefs?.officePolicy==='deprioritize'&&job.workMode==='onsite'){preferenceNotes.push('Mandatory office work lowers your preference; it is not an automatic exclusion.');preferenceBand='Lower preference';}
  const tags=typeof context.industry==='string'?context.industry.split(/[,/;]+/).map(s=>s.trim().toLowerCase()):[];

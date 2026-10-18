@@ -167,3 +167,33 @@ test('T38 a model cannot demote requirements to optional without explicit source
   return {url,text:url.endsWith('/careers')?'<a href="https://jobs.lever.co/official/pm">PM</a>':texts.join('\n')};
  }});const r=await p.discover({name:'Real',homepage:'https://employer.example',careers:'https://employer.example/careers'});assert.deepEqual(r.jobs[0].requirements.map(r=>r.core),[true,false,true]);
 });
+
+test('Q04 extraction preserves optional requirements even without a prefix',async()=>{
+ const p=getProviders({env:liveEnv,transport:async(url)=>{
+  if(url.includes('tavily.com'))return {text:'{"results":[]}'};
+  if(url.includes('tokenfactory'))return {text:JSON.stringify({choices:[{message:{content:JSON.stringify({jobs:[{title:'Product Manager',countries:[],workMode:'unknown',salary:null,requirements:[{text:'Lead products.',core:true},{text:'Experience with Rust is a plus.',core:false}]}]})}}]})};
+  return {url,text:url.endsWith('/careers')?'<a href="https://jobs.lever.co/official/42">PM</a>':'Lead products. Experience with Rust is a plus.'};
+ }});
+ const result=await p.discover({name:'Real',homepage:'https://employer.example',careers:'https://employer.example/careers'});
+ assert.equal(result.jobs.length,1);assert.equal(result.jobs[0].requirements[1].core,false);
+});
+
+test('Q05 public IPv4-mapped DNS answers are normalized; mapped private answers stay blocked',async()=>{
+ const publicAnswers=[{address:'93.184.216.34',family:4},{address:'::ffff:93.184.216.34',family:6}];let calls=0;
+ const result=await safeFetch('https://example.com',{lookup:async()=>publicAnswers,transport:async()=>{calls++;return new Response('public');}});
+ assert.equal(result.text,'public');assert.equal(calls,1);
+ for(const address of ['::ffff:127.0.0.1','::ffff:10.0.0.1','::ffff:169.254.169.254','::ffff:100.64.0.1','::ffff:7f00:1']){
+  await assert.rejects(safeFetch('https://example.com',{lookup:async()=>[...publicAnswers,{address,family:6}],transport:async()=>{calls++;return new Response('unsafe');}}),/Unsafe source DNS/);
+ }
+ assert.equal(calls,1);assert.throws(()=>validatePublicUrl('https://[::ffff:93.184.216.34]'),/Unsafe/);
+});
+
+test('Q06 an exact quote about APIs cannot prove an unmentioned minimum duration',async()=>{
+ const requirement='3+ years of product management experience shipping APIs.';
+ const j={title:'Product Manager',requirements:[{id:'r1',text:requirement,core:true}]};
+ for(const [quote,status] of [['Led enterprise API integration onboarding.','unknown'],['2 years of product management shipping APIs.','unknown'],['4 years of product management shipping APIs.','supported']]){
+  const p=getProviders({env:liveEnv,transport:async()=>({text:JSON.stringify({choices:[{message:{content:JSON.stringify({direction:'aligned',directionReason:'Same role',rows:[{requirementId:'r1',status:'supported',factId:'duration',profileQuote:quote,jobQuote:requirement}]})}}]})})});
+  const a=await p.assess(j,{...profile,facts:[{id:'duration',text:quote}]});
+  assert.equal(a.rows[0].status,status);if(status==='unknown')assert.equal(a.rows[0].factId,null);
+ }
+});

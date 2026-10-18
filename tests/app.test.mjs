@@ -38,3 +38,19 @@ test('T20 delete removes profile and all derived data from disk',async t=>{const
 test('T21 unsafe input URLs and foreign origins rejected',async t=>{const h=await harness(t);for(const url of ['http://example.com','https://127.0.0.1/careers','https://169.254.169.254/','https://[::1]/','https://user:pass@example.com/'])assert.equal((await h.request('/api/companies',{companies:[{...companies[0],homepage:url,careers:url}]})).status,400);const r=await fetch(h.base+'/api/profile',{method:'POST',headers:{Origin:'https://evil.example','Content-Type':'application/json'},body:JSON.stringify(profile)});assert.equal(r.status,403);});
 test('T23 manually supplied JD remains unverified and removable',async t=>{const h=await harness(t);await h.setup();const r=await h.request('/api/manual',{company:'Northstar',title:'Public pasted role',url:'https://northstar.example/careers/pasted',text:'Lead AI product evaluation. Remote details unknown.'});assert.equal(r.status,200);const row=(await h.state()).run.results[0];assert.equal(row.source.authority,'user-supplied unverified');assert.equal(row.assessment,null);assert.equal(row.category,null);await h.request('/api/data',{},'DELETE');assert.doesNotMatch(await readFile(h.file,'utf8'),/Public pasted role/);});
 test('T24 regional eligibility is unknown, not a country contradiction',async t=>{const h=await harness(t,providers({discover:async()=>({jobs:[job('eu',{text:'Lead AI product evaluation. Remote in EU.',countries:['EU']})],coverage:'checked'})}));await h.setup();const r=(await h.scan()).run.results[0];assert.equal(r.category,'Conditional');assert.match(r.constraints,/unknown/i);});
+
+test('Q01 missing evidence retains an aligned vacancy for clarification, without supported claims',async t=>{
+ const h=await harness(t,providers({assess:async j=>({direction:'aligned',directionReason:'Same role; direct evidence needs clarification.',rows:j.requirements.map(r=>({requirementId:r.id,status:'unknown',factId:null,profileQuote:null,jobQuote:r.text}))})}));
+ await h.setup();const result=(await h.scan()).run.results[0];
+ assert.equal(result.category,'Conditional');assert.match(result.experience,/0 of 1/);
+ assert.equal(result.assessment.rows[0].profileQuote,null);
+ const persisted=JSON.parse(await readFile(h.file));assert.equal(persisted.run.results[0].category,'Conditional');
+});
+test('Q02 optional-only evidence cannot produce an unqualified recommendation',async t=>{
+ const h=await harness(t,providers({discover:async c=>({jobs:c.name==='Fieldwork'?[]:[job('optional',{requirements:[{id:'r1',text:'Lead AI product evaluation.',core:false}]})],coverage:'checked'})}));
+ await h.setup();assert.equal((await h.scan()).run.results[0].category,'Conditional');
+});
+test('Q03 unknown experience never overrides a confirmed country mismatch',async t=>{
+ const h=await harness(t,providers({discover:async c=>({jobs:c.name==='Fieldwork'?[]:[job('restricted',{text:'Lead AI product evaluation. Remote in United States.',countries:['United States']})],coverage:'checked'}),assess:async j=>({direction:'aligned',directionReason:'Same role.',rows:j.requirements.map(r=>({requirementId:r.id,status:'unknown',factId:null,profileQuote:null,jobQuote:r.text}))})}));
+ await h.setup();assert.equal((await h.scan()).run.results[0].category,'Low priority');
+});

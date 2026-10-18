@@ -4,15 +4,15 @@ Working name: Rolemorrow. Name/domain approval is provisional; a similar career 
 
 ## Engineering evidence
 
-69 deterministic logic/API checks passed during development and in isolated Linux amd64 Docker checks. Browser scenarios cover synthetic search/evidence, persistent decisions, application packets/export, test correspondence, drafts, corrections and attention tasks. Development live runs exercised Tavily and NVIDIA Nano/Super on Nebius; private source data/logs are intentionally excluded from this public repository. These observations are not a current provider uptime or matching-quality guarantee. Human UAT is pending.
+75 deterministic logic/API checks passed during development and in isolated Linux amd64 Docker checks. Browser scenarios cover synthetic search/evidence, persistent decisions, application packets/export, test correspondence, drafts, corrections and attention tasks. Development live runs exercised Tavily and NVIDIA Nano/Super on Nebius; private source data/logs are intentionally excluded from this public repository. These observations are not a current provider uptime or matching-quality guarantee. On October 18 a separate fictional demo passed the running-container HTTP journey (three fit categories, saved opportunity, packet, test invitation and unsent reply). Fresh browser automation was not rerun for this backend increment. Human UAT is pending.
 
 ## Hackathon package
 
 - Public source repository with root MIT LICENSE and setup/provider documentation: this deliverable.
-- Reproducible fictional demo: included; verify from clean clone.
-- Shareable judge demo/test build: pending. Do not expose a personal workspace; use isolated fictional sessions and bounded provider spending.
+- Reproducible isolated fictional test build: compose.demo.yaml, separate volume, loopback port 3028, no provider credentials; running-container acceptance passed.
+- Judge access: downloadable test build included; public hosted service is not deployed. Do not expose a personal workspace.
 - Public YouTube demo, less than three minutes: pending.
-- English project description, architectural walkthrough, dated provider-runtime evidence with synthetic data, provider feedback and changes-during-competition disclosure: prepare/review before submission.
+- English project description, 2:40 video storyboard and provider feedback: drafted in SUBMISSION.md. Architecture documented. Actual Nano/Super runtime on a fictional applicant rechecked October 18; see QUALITY.md. Owner authorship/development-period disclosure and final material review remain pending.
 - Final Devpost submission and receipt: pending; separate owner decision.
 
 Official deadline: October 30, 2026 at 10:00 PDT, equivalent to 17:00 UTC / Europe/Lisbon on that date. Recheck [official rules](https://nebiusglobalaihackathon.devpost.com/rules) before submitting.

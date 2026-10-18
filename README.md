@@ -33,6 +33,19 @@ Do not use `down -v` as routine cleanup. State lives in the named volume at `/ap
 
 For a remote Docker host, forward its localhost port over SSH. Follow your own host execution policy; the commands above do not require running the app natively.
 
+## Isolated judge test build
+
+Use a separate fictional workspace alongside an existing personal installation:
+
+```sh
+docker compose -f compose.demo.yaml build demo
+docker compose -f compose.demo.yaml up -d --wait demo
+```
+
+Open **http://127.0.0.1:3028/**, select **Use fictional example**, then run a check. This Compose file does not pass provider credentials, fixes live mode off, and uses its own volume. It publishes only on loopback. For a remote host, forward port 3028 over SSH. Its small network subnet can be changed with `ROLEMORROW_DEMO_SUBNET` if it overlaps your network. Stop with `docker compose -f compose.demo.yaml stop demo`; inspect health/logs with `ps` and `logs --tail=100 demo` using the same Compose file. Keep the volume to retain the fictional story; reset through the app's explicit deletion action if needed.
+
+The test build is downloadable source, not a publicly hosted service. See [submission draft](docs/SUBMISSION.md) and [matching acceptance](docs/QUALITY.md).
+
 ## Demo journey
 
 1. Confirm profile and goal; select up to five official employer career pages.
@@ -66,7 +79,7 @@ docker compose -f compose.checks.yaml build
 docker compose -f compose.checks.yaml run --rm --no-deps checks
 ```
 
-Checks run without network access, runtime secrets or the personal data volume. This release has 69 deterministic logic/API checks. GitHub Actions runs these checks and builds the runtime image; it does not claim browser or live-provider readiness.
+Checks run without network access, runtime secrets or the personal data volume. This release has 75 deterministic logic/API checks. GitHub Actions runs these checks and builds the runtime image; it does not claim browser or live-provider readiness.
 
 Browser scenarios are included in `tests/*-e2e.mjs`, `tests/e2e.mjs` and `tests/browser-cases.mjs`, using isolated temporary stores. They require the pinned Playwright Chromium installation in a reviewed browser environment. Run `npm run test:e2e` there. A browser container must preserve Chromium's sandbox; no unsupported browser-container setup is claimed here. Development browser passes are separate from clean-clone Docker verification and human acceptance.
 

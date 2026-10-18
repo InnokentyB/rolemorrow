@@ -19,7 +19,10 @@ export async function safeFetch(value,{signal,lookup=dnsLookup,transport=fetch,m
  for(let hop=0;hop<6;hop++){
   combined.throwIfAborted();
   const hostname=u.hostname.replace(/^\[|\]$/g,'');
-  const addresses=isIP(hostname)?[{address:hostname,family:isIP(hostname)}]:await Promise.race([lookup(hostname,{all:true,verbatim:true}),new Promise((_,reject)=>combined.addEventListener('abort',()=>reject(new Error('Source request cancelled or timed out.')),{once:true}))]);
+  const resolved=isIP(hostname)?[{address:hostname,family:isIP(hostname)}]:await Promise.race([lookup(hostname,{all:true,verbatim:true}),new Promise((_,reject)=>combined.addEventListener('abort',()=>reject(new Error('Source request cancelled or timed out.')),{once:true}))]);
+  // DNS can return dotted IPv4-mapped aliases alongside public IPv4. Normalize
+  // only this exact form before validation/pinning; URL literals remain prohibited.
+  const addresses=resolved.map(a=>{const tail=/^::ffff:(\d+\.\d+\.\d+\.\d+)$/i.exec(a.address)?.[1];return tail&&isIP(tail)===4?{address:tail,family:4}:a;});
   if(!addresses.length||addresses.some(a=>!publicAddress(a.address)))throw new Error('Unsafe source DNS address.');
   const agent=new Agent({connect:{lookup:(_host,options,cb)=>{const selected=addresses.filter(a=>!options.family||a.family===options.family);if(!selected.length)return cb(new Error('No permitted address.'));if(options.all)cb(null,selected);else cb(null,selected[0].address,selected[0].family);}}});
   try{
