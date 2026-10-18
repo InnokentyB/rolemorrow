@@ -6,7 +6,7 @@ Status: preparation, not a submitted entry. Recommended track: Best Apps and Age
 
 Job boards optimize for browsing. Rolemorrow starts with the applicant: confirmed experience, a career direction and practical preferences. It searches chosen employers' own career sites and linked applicant-tracking systems, then puts the evidence behind each recommendation in view.
 
-NVIDIA Nemotron models on Nebius Token Factory extract requirements and assess them against explicit profile facts. The application validates quotations and references, applies country and preference rules, and separates supported experience from questions that still need an answer. A partial search stays visibly partial. A match category is a review aid, not a prediction of an offer.
+NVIDIA Nemotron models on Nebius Token Factory extract requirements and assess them against explicit profile facts. Independent review filters non-requirements and checks proposed supported claims. The application validates quotations and references, applies country and preference rules, and separates supported experience from questions that still need an answer. A partial search stays visibly partial. A match category is a review aid, not a prediction of an offer.
 
 Candidates can save opportunities, preserve decisions between searches, prepare and export an application packet, and organize test/manual correspondence. Inbox items can suggest a next action; stage changes need the candidate's confirmation. Reply drafts stay unsent.
 

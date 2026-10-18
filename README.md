@@ -62,13 +62,13 @@ Live mode needs server opt-in (`ALLOW_LIVE=1`), `NEBIUS_API_KEY`, `TAVILY_API_KE
 The exercised development configuration used:
 
 - extraction: `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B`;
-- assessment: `nvidia/nemotron-3-super-120b-a12b`;
+- requirement review, assessment and independent claim verification: `nvidia/nemotron-3-super-120b-a12b`;
 - inference: Nebius Token Factory chat completions with structured JSON responses;
 - discovery: Tavily Search followed by direct DNS-validated retrieval of employer/linked ATS sources.
 
 Model availability is project-dependent; check the current provider catalogue before enabling live mode. The UI requires consent before transmitting the saved profile/goal to Nebius; public-source search queries go to Tavily. Local deletion cannot delete provider-held records.
 
-Search snippets never count as requirements. Only official employer sources or literally linked ATS tenants are accepted. Deterministic guards reject invalid quotes/references. Exact quotations prove provenance, not semantic correctness. Discovery is bounded and may be partial; no claim of complete market coverage or guaranteed eligibility is made.
+Search snippets never count as requirements. Only official employer sources or literally linked ATS tenants are accepted. Deterministic guards reject invalid quotes/references. An independent model pass filters non-requirements and another can only downgrade proposed supported claims; invalid review responses fail closed. A posting uses up to four model calls, so keep live limits small. Exact quotations and a second model opinion still do not prove semantic correctness. Discovery is bounded and may be partial; no claim of complete market coverage or guaranteed eligibility is made.
 
 Official provider references: [Nebius quickstart](https://docs.tokenfactory.nebius.com/quickstart), [structured inference](https://docs.tokenfactory.nebius.com/ai-models-inference/json), [Tavily Search](https://docs.tavily.com/documentation/api-reference/endpoint/search).
 
@@ -79,7 +79,7 @@ docker compose -f compose.checks.yaml build
 docker compose -f compose.checks.yaml run --rm --no-deps checks
 ```
 
-Checks run without network access, runtime secrets or the personal data volume. This release has 75 deterministic logic/API checks. GitHub Actions runs these checks and builds the runtime image; it does not claim browser or live-provider readiness.
+Checks run without network access, runtime secrets or the personal data volume. This release has 78 deterministic logic/API checks. GitHub Actions runs these checks and builds the runtime image; it does not claim browser or live-provider readiness.
 
 Browser scenarios are included in `tests/*-e2e.mjs`, `tests/e2e.mjs` and `tests/browser-cases.mjs`, using isolated temporary stores. They require the pinned Playwright Chromium installation in a reviewed browser environment. Run `npm run test:e2e` there. A browser container must preserve Chromium's sandbox; no unsupported browser-container setup is claimed here. Development browser passes are separate from clean-clone Docker verification and human acceptance.
 

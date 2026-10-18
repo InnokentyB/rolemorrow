@@ -1,8 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {validatePublicUrl,safeFetch} from '../app/network.mjs';
-import {getProviders,createFixtureProviders} from '../app/providers.mjs';
+import {getProviders as createProviders,createFixtureProviders} from '../app/providers.mjs';
 import {profile,companies} from './fixtures.mjs';
+// Named deterministic semantic adapter: these contract tests do not evaluate model judgment.
+const getProviders=options=>createProviders({reviewRequirements:async j=>j.requirements.map(r=>r.id),verifyEvidence:async(_j,_p,a)=>a.rows.filter(r=>r.status==='supported').map(r=>r.requirementId),...options});
 test('URL validation blocks local, reserved, credentials and mapped addresses',()=>{
  for(const url of ['http://example.com','https://user:pass@example.com','https://localhost','https://127.0.0.1','https://10.0.0.1','https://169.254.169.254','https://[::1]','https://[::ffff:127.0.0.1]','https://[2001:db8::1]','https://[2001::1]','https://[3fff::1]']) assert.throws(()=>validatePublicUrl(url));
  assert.equal(validatePublicUrl('https://example.com/jobs').hostname,'example.com');
@@ -195,5 +197,30 @@ test('Q06 an exact quote about APIs cannot prove an unmentioned minimum duration
   const p=getProviders({env:liveEnv,transport:async()=>({text:JSON.stringify({choices:[{message:{content:JSON.stringify({direction:'aligned',directionReason:'Same role',rows:[{requirementId:'r1',status:'supported',factId:'duration',profileQuote:quote,jobQuote:requirement}]})}}]})})});
   const a=await p.assess(j,{...profile,facts:[{id:'duration',text:quote}]});
   assert.equal(a.rows[0].status,status);if(status==='unknown')assert.equal(a.rows[0].factId,null);
+ }
+});
+
+
+test('Q07 independent verification can downgrade an exact but non-entailing quote',async()=>{
+ let calls=0;const requirement='Write UX research reports.';
+ const p=createProviders({env:liveEnv,transport:async()=>{calls++;const content=calls===1?{direction:'aligned',directionReason:'Same role',rows:[{requirementId:'r1',status:'supported',factId:'f1',profileQuote:'Personally wrote SQL queries.',jobQuote:requirement}]}:{supportedIds:[]};return {text:JSON.stringify({choices:[{message:{content:JSON.stringify(content)}}]})};}});
+ const a=await p.assess({title:'Product Manager',requirements:[{id:'r1',text:requirement,core:true}]},{...profile,facts:[{id:'f1',text:'Personally wrote SQL queries.'}]});
+ assert.equal(calls,2);assert.equal(a.rows[0].status,'unknown');assert.equal(a.rows[0].profileQuote,null);
+});
+test('Q08 requirement review excludes perks and duplicate source clauses before assessment',async()=>{
+ const p=createProviders({env:liveEnv,transport:async(url,opts={})=>{
+  if(url.includes('tavily.com'))return {text:'{"results":[]}'};
+  if(url.includes('tokenfactory')){const payload=JSON.parse(opts.body);const review=payload.messages[0].content.includes('Review extracted requirements');const content=review?{keepIds:['r1']}:{jobs:[{title:'Product Manager',countries:[],workMode:'unknown',salary:null,requirements:[{text:'Lead products.',core:true},{text:'Company-sponsored health coverage.',core:true},{text:'Lead products.',core:true}]}]};return {text:JSON.stringify({choices:[{message:{content:JSON.stringify(content)}}]})};}
+  return {url,text:url.endsWith('/careers')?'<a href="https://jobs.lever.co/official/42">PM</a>':'Lead products. Company-sponsored health coverage.'};
+ }});const result=await p.discover({name:'Real',homepage:'https://employer.example',careers:'https://employer.example/careers'});
+ assert.equal(result.jobs.length,1);assert.deepEqual(result.jobs[0].requirements.map(r=>r.text),['Lead products.']);
+});
+
+test('Q09 failed or fabricated verification cannot publish supported claims',async()=>{
+ for(const verification of [{supportedIds:['r1']},{supportedIds:['invented']},{notTheContract:[]}]){
+  let calls=0;const requirement='Lead AI product evaluation.';
+  const p=createProviders({env:liveEnv,transport:async()=>{calls++;return {text:JSON.stringify({choices:[{message:{content:JSON.stringify(calls===1?{direction:'aligned',directionReason:'Same role',rows:[{requirementId:'r1',status:'supported',factId:'f1',profileQuote:'AI product evaluation',jobQuote:requirement}]}:verification)}}]})};}});
+  const request=p.assess({title:'Product Manager',requirements:[{id:'r1',text:requirement,core:true}]},profile);
+  if(verification.supportedIds?.[0]==='r1')assert.equal((await request).rows[0].status,'supported');else await assert.rejects(request,/Invalid semantic review/);
  }
 });
