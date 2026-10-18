@@ -36,3 +36,7 @@
 !/.github/workflows/checks.yml
 
 !/docs/USER-JOURNEYS.md
+
+!/docs/PERSONA-EVALUATION.md
+!/docs/PERSONA-LIVE.json
+!/docs/PERSONA-REPLAY.json

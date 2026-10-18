@@ -79,7 +79,7 @@ docker compose -f compose.checks.yaml build
 docker compose -f compose.checks.yaml run --rm --no-deps checks
 ```
 
-Checks run without network access, runtime secrets or the personal data volume. This release has 95 deterministic logic/API checks, including a frozen matrix of 15 profile/vacancy combinations. Shared server/browser ranking puts role and core evidence before soft preferences. Evidence can be full, partial (with matched and missing clauses), or unconfirmed; it is not a hiring probability. Load the fictional example and check its employers to see all three states without API keys.
+Checks run without network access, runtime secrets or the personal data volume. This release has 96 deterministic logic/API checks, including a frozen matrix of 15 profile/vacancy combinations. Shared server/browser ranking puts role and core evidence before soft preferences. Evidence can be full, partial (with matched and missing clauses), or unconfirmed; it is not a hiring probability. Load the fictional example and check its employers to see all three states without API keys.
 
 The nine browser scripts run with disposable stores and synthetic providers:
 
@@ -98,6 +98,8 @@ docker run --rm --init --cpus=1 --memory=512m --pids-limit=128 --cap-drop=ALL --
 ```
 
 Keep that environment file outside the checkout; supply only Nebius configuration needed for this workload. Never commit keys or personal state. The latest bounded report is [QUALITY-LIVE.json](docs/QUALITY-LIVE.json): six of six passed, with zero false full-support claims and zero false negatives within this subset. This is not a market accuracy estimate. See [platform acceptance](docs/PLATFORM-ACCEPTANCE.md) for scenarios and verification limits, and [user journeys](docs/USER-JOURNEYS.md) for the manual acceptance path.
+
+Additional multi-persona evaluation: [six synthetic candidates](docs/PERSONA-EVALUATION.md).
 
 ## Limits and next work
 

@@ -69,3 +69,7 @@ Supersedes the previous 82-check engineering count: 95 deterministic checks pass
 A six-case actual Nebius check initially found a false negative: full support proposed by the first model was discarded instead of retaining a supported clause. A RED regression preceded the reviewer downgrade fix. The final fixed-set run passed 6/6, with zero false full-support and zero false negatives in that subset; per-case evidence, model and policy are in QUALITY-LIVE.json. No claim of general matching accuracy follows from six cases. Human semantic acceptance remains pending.
 
 The scoped independent UI finish review passed without material P0/P1 findings. The design detector used degraded regex fallback; computed contrast and assistive-technology behavior were not independently verified.
+
+## Six-persona exploratory run
+
+See [PERSONA-EVALUATION.md](PERSONA-EVALUATION.md). Twelve frozen synthetic comparisons across PM, ML engineering, design, finance transition, junior growth and telecom platform experience produced 9/12 exact expected outcomes. No false full-support claims or lost expected full claims occurred in that subset. Two direction judgments were too soft and one first assessment was unavailable; a separate retry of that case returned partial support. Initial failures are preserved. API replay used six disposable stores; no private candidate data was used and no production behavior was changed. These findings expand the known limits of the earlier 6/6 subset.
