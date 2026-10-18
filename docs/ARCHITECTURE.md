@@ -1,6 +1,6 @@
 # Architecture
 
-Browser (vanilla ES modules) → localhost Node HTTP server → atomic private JSON state. Live search calls Tavily and fetches validated public pages; NVIDIA models on Nebius extract requirements and assess quoted candidate evidence. The fictional adapter uses deterministic fixtures without network calls.
+Browser (vanilla ES modules) → localhost Node HTTP server → atomic private JSON state. Live search calls Tavily and fetches validated public pages; NVIDIA models on Nebius extract requirements, independently filter non-requirements, assess quoted candidate evidence and verify proposed supported claims. Verification reviews every proposed claim with a reason and boolean verdict; missing, repeated or invented IDs fail closed. Only originally proposed claims can survive; other claims remain unknown. Logical alternatives and optional clauses must not be treated as extra mandatory conditions. The fictional adapter uses deterministic fixtures without network calls.
 
 - `app/server.mjs`: same-origin JSON writes, local Host validation, CSP, routing, bounded requests and atomic state mutation.
 - `app/network.mjs`: public URL/DNS/redirect validation, bounded retrieval and sanitized network errors.

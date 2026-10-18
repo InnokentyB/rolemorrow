@@ -203,7 +203,7 @@ test('Q06 an exact quote about APIs cannot prove an unmentioned minimum duration
 
 test('Q07 independent verification can downgrade an exact but non-entailing quote',async()=>{
  let calls=0;const requirement='Write UX research reports.';
- const p=createProviders({env:liveEnv,transport:async()=>{calls++;const content=calls===1?{direction:'aligned',directionReason:'Same role',rows:[{requirementId:'r1',status:'supported',factId:'f1',profileQuote:'Personally wrote SQL queries.',jobQuote:requirement}]}:{supportedIds:[]};return {text:JSON.stringify({choices:[{message:{content:JSON.stringify(content)}}]})};}});
+ const p=createProviders({env:liveEnv,transport:async()=>{calls++;const content=calls===1?{direction:'aligned',directionReason:'Same role',rows:[{requirementId:'r1',status:'supported',factId:'f1',profileQuote:'Personally wrote SQL queries.',jobQuote:requirement}]}:{reviews:[{requirementId:'r1',reason:'SQL does not establish UX research.',supported:false}]};return {text:JSON.stringify({choices:[{message:{content:JSON.stringify(content)}}]})};}});
  const a=await p.assess({title:'Product Manager',requirements:[{id:'r1',text:requirement,core:true}]},{...profile,facts:[{id:'f1',text:'Personally wrote SQL queries.'}]});
  assert.equal(calls,2);assert.equal(a.rows[0].status,'unknown');assert.equal(a.rows[0].profileQuote,null);
 });
@@ -217,10 +217,23 @@ test('Q08 requirement review excludes perks and duplicate source clauses before 
 });
 
 test('Q09 failed or fabricated verification cannot publish supported claims',async()=>{
- for(const verification of [{supportedIds:['r1']},{supportedIds:['invented']},{notTheContract:[]}]){
+ for(const verification of [{reviews:[{requirementId:'r1',reason:'Direct evidence.',supported:true}]},{reviews:[{requirementId:'invented',reason:'Invalid reference.',supported:true}]},{notTheContract:[]}]){
   let calls=0;const requirement='Lead AI product evaluation.';
   const p=createProviders({env:liveEnv,transport:async()=>{calls++;return {text:JSON.stringify({choices:[{message:{content:JSON.stringify(calls===1?{direction:'aligned',directionReason:'Same role',rows:[{requirementId:'r1',status:'supported',factId:'f1',profileQuote:'AI product evaluation',jobQuote:requirement}]}:verification)}}]})};}});
   const request=p.assess({title:'Product Manager',requirements:[{id:'r1',text:requirement,core:true}]},profile);
-  if(verification.supportedIds?.[0]==='r1')assert.equal((await request).rows[0].status,'supported');else await assert.rejects(request,/Invalid semantic review/);
+  if(verification.reviews?.[0]?.requirementId==='r1')assert.equal((await request).rows[0].status,'supported');else await assert.rejects(request,/Invalid semantic review/);
  }
+});
+
+test('Q10 product marketing is a different function from a Product Manager goal',async()=>{
+ const p=getProviders({env:liveEnv,transport:async()=>({text:JSON.stringify({choices:[{message:{content:JSON.stringify({direction:'aligned',directionReason:'Overbroad product title match',rows:[{requirementId:'r1',status:'unknown',factId:null,profileQuote:null,jobQuote:'Lead product marketing.'}]})}}]})})});
+ const a=await p.assess({title:'Director of Product Marketing',requirements:[{id:'r1',text:'Lead product marketing.',core:true}]},profile);
+ assert.equal(a.direction,'different');
+});
+
+test('Q11 claim verification uses bounded reasoning while initial assessment remains fast',async()=>{
+ const payloads=[];const text='Lead AI product evaluation.';
+ const p=createProviders({env:{...liveEnv,NEBIUS_ASSESSMENT_MODEL:'nvidia/nemotron-3-super-120b-a12b'},transport:async(_url,opts)=>{payloads.push(JSON.parse(opts.body));return {text:JSON.stringify({choices:[{message:{content:JSON.stringify(payloads.length===1?{direction:'aligned',directionReason:'Same role',rows:[{requirementId:'r1',status:'supported',factId:'f1',profileQuote:'AI product evaluation',jobQuote:text}]}:{reviews:[{requirementId:'r1',reason:'Direct evidence.',supported:true}]})}}]})};}});
+ assert.equal((await p.assess({title:'Product Manager',requirements:[{id:'r1',text,core:true}]},profile)).rows[0].status,'supported');
+ assert.equal(payloads[0].chat_template_kwargs.enable_thinking,false);assert.equal(payloads[1].chat_template_kwargs.enable_thinking,true);assert.equal(payloads[1].chat_template_kwargs.reasoning_budget,2048);assert.equal(payloads[1].max_tokens,8192);
 });
