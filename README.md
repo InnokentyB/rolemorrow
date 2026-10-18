@@ -79,7 +79,7 @@ docker compose -f compose.checks.yaml build
 docker compose -f compose.checks.yaml run --rm --no-deps checks
 ```
 
-Checks run without network access, runtime secrets or the personal data volume. This release has 80 deterministic logic/API checks. GitHub Actions runs these checks and builds the runtime image; it does not claim browser or live-provider readiness.
+Checks run without network access, runtime secrets or the personal data volume. This release has 82 deterministic logic/API checks. GitHub Actions runs these checks and builds the runtime image; it does not claim browser or live-provider readiness.
 
 Browser scenarios are included in `tests/*-e2e.mjs`, `tests/e2e.mjs` and `tests/browser-cases.mjs`, using isolated temporary stores. They require the pinned Playwright Chromium installation in a reviewed browser environment. Run `npm run test:e2e` there. A browser container must preserve Chromium's sandbox; no unsupported browser-container setup is claimed here. Development browser passes are separate from clean-clone Docker verification and human acceptance.
 

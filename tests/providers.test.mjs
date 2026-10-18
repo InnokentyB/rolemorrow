@@ -237,3 +237,16 @@ test('Q11 claim verification uses bounded reasoning while initial assessment rem
  assert.equal((await p.assess({title:'Product Manager',requirements:[{id:'r1',text,core:true}]},profile)).rows[0].status,'supported');
  assert.equal(payloads[0].chat_template_kwargs.enable_thinking,false);assert.equal(payloads[1].chat_template_kwargs.enable_thinking,true);assert.equal(payloads[1].chat_template_kwargs.reasoning_budget,2048);assert.equal(payloads[1].max_tokens,8192);
 });
+
+test('Q12 production quality gates alone do not establish explainability',async()=>{
+ const text='Own scoring models so the score is accurate, explainable and safe to change.';
+ for(const [quote,status] of [['Own production monitoring and release quality gates.','unknown'],['Own scoring models, accuracy, explainability and safe rollout.','supported']]){
+  const p=getProviders({env:liveEnv,transport:async()=>({text:JSON.stringify({choices:[{message:{content:JSON.stringify({direction:'aligned',directionReason:'Same role',rows:[{requirementId:'r1',status:'supported',factId:'explainability',profileQuote:quote,jobQuote:text}]})}}]})})});
+  assert.equal((await p.assess({title:'Product Manager',requirements:[{id:'r1',text,core:true}]},{...profile,facts:[{id:'explainability',text:quote}]})).rows[0].status,status);
+ }
+});
+
+test('Q13 product engineering is distinct from a Product Manager goal',async()=>{
+ const p=getProviders({env:liveEnv,transport:async()=>({text:JSON.stringify({choices:[{message:{content:JSON.stringify({direction:'aligned',directionReason:'Overbroad product match',rows:[{requirementId:'r1',status:'unknown',factId:null,profileQuote:null,jobQuote:'Build products.'}]})}}]})})});
+ assert.equal((await p.assess({title:'Senior Product Engineer, R&D',requirements:[{id:'r1',text:'Build products.',core:true}]},profile)).direction,'different');
+});
