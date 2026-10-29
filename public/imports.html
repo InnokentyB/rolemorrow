@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Import career history · Rolemorrow</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/imports.js"></script>
+  </head>
+  <body>
+    <header class="masthead">
+      <a class="brand" href="/">Rolemorrow</a><a href="/account">My account</a>
+    </header>
+    <main>
+      <div class="workspace-heading">
+        <div>
+          <h1>Bring your career history together.</h1>
+          <p>
+            Review selected vacancies, correspondence and submitted documents before saving them.
+          </p>
+        </div>
+      </div>
+      <div class="workspace">
+        <aside>
+          <h2>Your source, your choice</h2>
+          <p class="aside-note">
+            Import selected career items from JA Tower or a prepared mailbox export. Original dates,
+            direction and submitted files remain evidence.
+          </p>
+          <p class="aside-note">
+            This does not connect a mailbox or send an application. Your confirmed profile stays
+            unchanged.
+          </p>
+          <a href="/">Back to workspace</a>
+        </aside>
+        <section class="view" aria-label="Career history import">
+          <h2>Review a selected export</h2>
+          <p id="import-account" class="help">Checking your account…</p>
+          <label for="import-file">Selected career export (JSON)</label
+          ><input id="import-file" type="file" accept="application/json,.json" />
+          <p class="help">
+            Use an export containing your source account and selected vacancy or message items.
+            Include original PDF or text bytes when available. Security and authentication messages
+            are excluded.
+          </p>
+          <button id="import-preview" type="button" disabled>Preview selected export</button
+          ><button id="import-cancel" class="secondary" type="button" hidden>
+            Discard staged import
+          </button>
+          <p id="import-status" role="status" aria-live="polite" tabindex="-1"></p>
+          <section aria-label="Import preview">
+            <div id="import-items"></div>
+            <button id="import-commit" type="button" disabled>Import selected items</button>
+          </section>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

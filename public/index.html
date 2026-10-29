@@ -1,34 +1,955 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rolemorrow — your next move, with evidence</title><link rel="stylesheet" href="/style.css"><script type="module" src="/app.js"></script></head>
-<body>
-<!-- THESIS: Compare career possibilities against evidence, not percentages. No marketing hero or decorative score dashboard.
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Rolemorrow — your next move, with evidence</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <!-- THESIS: Compare career possibilities against evidence, not percentages. No marketing hero or decorative score dashboard.
 OWN-WORLD: A professional research worksheet: cobalt active controls, ink text, cool gray canvas, white ruled records. One familiar sans family.
 STORY: Confirm your experience and direction, choose employers, then inspect evidence behind each recommendation.
 FIRST VIEWPORT: Compact masthead and three-step navigation; context rail beside a working form or ruled result list; one main action at the form's end.
 FORM: Candidate 5, research worksheet; seed 24d4c0cf. Other grounded forms: recruiter inbox, library catalogue, route planner, spreadsheet, dossier tabs, annotation reader. Code-led operate surface, scope approved by owner.
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md -->
-<header class="masthead"><a href="/" class="brand" aria-label="Rolemorrow home"><svg viewBox="0 0 24 24" width="25" height="25" aria-hidden="true"><path d="M4 17V5h12M8 20h12V8M4 5l16 15" fill="none" stroke="currentColor" stroke-width="2"/></svg>Rolemorrow</a><span class="mode-label" id="mode-label">Fictional example · no external requests</span></header>
-<main>
-<div class="workspace-heading"><div><h1>Find work worth moving for.</h1><p>Your experience. Your employers. A considered next move.</p></div><button class="secondary" id="example" disabled>Use fictional example</button></div>
-<nav aria-label="Search workspace"><button data-tab="profile" aria-current="page">Profile &amp; goal</button><button data-tab="companies">Companies</button><button data-tab="results">Results</button><button data-tab="saved">Saved jobs</button><button data-tab="applications">Applications</button><button data-tab="inbox">Inbox</button></nav>
-<section id="journey" class="journey" aria-label="Next step"><div><strong id="journey-title"></strong><p id="journey-description"></p></div><button id="journey-action" class="secondary" disabled>Build your profile</button></section>
-<div id="notice" role="status" aria-live="polite"></div>
-<div class="workspace">
-<aside><h2>Your search brief</h2><dl><dt>Target role</dt><dd id="brief-role">Not set</dd><dt>Work country</dt><dd id="brief-country">Not set</dd><dt>Companies</dt><dd id="brief-companies">None selected</dd></dl><p class="aside-note">Recommendations show evidence and uncertainty. They do not predict an employer’s hiring decision.</p><button class="text-button danger" id="delete">Delete local data</button><div id="delete-confirm" hidden><p>Delete your profile, companies, saved checks and saved jobs, including correspondence, files, reply drafts and the app’s compatibility backups, from this computer?</p><button class="danger secondary" id="confirm-delete">Confirm deletion</button><button class="text-button" id="keep-data">Keep data</button></div></aside>
-<section id="profile-view" class="view" aria-labelledby="profile-heading"><div class="section-heading"><h2 id="profile-heading">A clear starting point.</h2><p>Your experience and your next step are separate inputs.</p></div>
-<form id="profile-form"><label for="facts">Confirmed experience</label><p class="help" id="facts-help">One factual statement per line. Include what you owned, built or delivered. No contact details needed.</p><textarea id="facts" rows="5" aria-describedby="facts-help" placeholder="Led AI product evaluation and API platform launches."></textarea>
-<div class="field-grid"><div><label for="roles">Target roles</label><input id="roles" placeholder="Senior Product Manager"></div><div><label for="industries">Career domain context</label><input id="industries" placeholder="AI, fintech"><p class="help">Broad context for matching. Set ranking preferences in Career preferences below.</p></div><div><label for="country">Base work country</label><input id="country" placeholder="Portugal"><p class="help">Use the country’s full name. Relocation options are separate preferences; “remote” alone does not establish eligibility.</p></div><div><label for="work-mode">Required work mode</label><select id="work-mode"><option value="remote">Remote</option><option value="hybrid">Hybrid</option><option value="onsite">Onsite</option><option value="any">Any work mode</option></select></div></div>
-<details id="preferences-panel"><summary>Career preferences</summary><p class="help">Preferences change priority; they are separate from experience and eligibility. An unanswered question does not create a filter.</p><div class="field-grid"><div><label for="career-priority">Main career priority</label><select id="career-priority"><option value="content">Role and work content first</option><option value="balanced">Balance work and relocation</option><option value="relocation">Relocation first</option></select></div><div><label class="checkbox"><input type="checkbox" id="leadership-required" aria-label="Leadership title required">Leadership title required</label><p class="help">Leave off if Senior/Lead individual contributor roles are also welcome.</p></div><div><label for="relocations">Relocation destinations</label><textarea id="relocations" rows="4" placeholder="Norway&#10;Luxembourg&#10;New Zealand&#10;United States?"></textarea><p class="help">One full country name per line. Add ? for a tentative destination. Moving does not establish work rights.</p></div><div><label for="office-policy">Office preference</label><select id="office-policy"><option value="neutral">No preference penalty</option><option value="deprioritize">Mandatory office lowers priority</option></select></div><div><label for="salary-country">Salary target country</label><input id="salary-country" placeholder="Portugal"></div><div><label for="salary-currency">Salary currency</label><select id="salary-currency"><option>EUR</option><option>USD</option><option>GBP</option><option>NOK</option><option>NZD</option></select></div><div><label for="salary-min">Target annual minimum</label><input id="salary-min" type="number" min="0" max="10000000" step="1000" placeholder="100000"></div><div><label for="salary-max">Target annual maximum</label><input id="salary-max" type="number" min="0" max="10000000" step="1000" placeholder="120000"></div><div><label for="salary-basis">Compensation basis</label><select id="salary-basis"><option value="pending">Needs clarification</option><option value="base">Fixed base; bonus on top</option><option value="total">Total cash including bonus</option></select></div><div><label for="salary-policy">Below-target salary</label><select id="salary-policy"><option value="pending">Needs confirmation</option><option value="soft">Lower priority; keep eligible</option><option value="hard">Exclude below target</option></select></div><div><label for="salary-unknown">Unpublished salary</label><select id="salary-unknown"><option value="pending">Needs confirmation</option><option value="keep">Keep; clarify with employer</option><option value="exclude">Exclude</option></select></div><div><label for="preferred-themes">Preferred work themes</label><input id="preferred-themes" placeholder="AI-native, cutting-edge AI"><label class="checkbox"><input type="checkbox" id="themes-confirmed">Themes confirmed</label></div><div><label for="preferred-industries">Preferred industries</label><input id="preferred-industries" placeholder="fintech, edtech, regtech"></div><div><label for="disfavored-industries">Lower-priority industries</label><input id="disfavored-industries" placeholder="Leave empty if none"><label class="checkbox"><input type="checkbox" id="industries-confirmed">Industry preferences confirmed</label></div></div><p class="help">Amounts mean gross annual pay for the selected country only; confirm whether your target is base salary or total cash. Foreign currency or an unclear pay period is not silently converted. Industry and theme boosts use your employer tags, not assumptions from job titles.</p></details><section id="intake-questions" hidden aria-label="Questions still to answer"><h3>Still to clarify</h3><ul></ul></section>
-<div class="form-footer"><p>Saved on this computer. Nothing is sent while you edit.</p><button type="submit" disabled>Save profile</button></div></form>
-</section>
-<section id="companies-view" class="view" hidden aria-labelledby="companies-heading"><div class="section-heading"><h2 id="companies-heading">Start with employers you care about.</h2><p>Choose up to five. We check their own careers pages and the hiring systems linked from those pages.</p></div>
-<form id="companies-form"><label for="company-sources">Company sources</label><p class="help" id="company-help">One company per line: name | official homepage | official careers page | industry (optional).</p><textarea id="company-sources" rows="7" aria-describedby="company-help" spellcheck="false" placeholder="Company | https://company.com | https://company.com/careers | AI"></textarea><p class="help">Use the company’s own careers URL here. An ATS address is accepted only after an official company page links to it.</p><div class="form-footer"><p>Industry preferences inform the explanation; they are not hard exclusions.</p><button type="submit" disabled>Save companies</button></div></form>
-<div class="run-controls"><h3>Choose how to check</h3><label for="mode">Search mode</label><select id="mode"><option value="fixture">Fictional example — no external requests</option><option value="live" disabled>Live sources + NVIDIA — not configured</option></select><p id="live-note" class="help">Live checking is disabled until server access, API keys and an explicit NVIDIA model are configured.</p><div id="sharing" hidden><label class="checkbox"><input type="checkbox" id="consent">I approve sending this saved profile and career goal to Nebius, and company search queries to Tavily. Provider retention policies apply.</label></div><div class="actions"><button id="scan" disabled>Check selected companies</button></div><p class="help">Bounded to 20 listings per company. Partial checks are labelled.</p></div>
-</section>
-<section id="results-view" class="view" hidden aria-labelledby="results-heading"><div class="section-heading result-header"><div><h2 id="results-heading">Your opportunities.</h2><p id="run-summary">Save a profile and select companies to begin.</p></div><div class="result-actions"><button class="secondary" id="review-sources">Edit company sources</button><button id="cancel" class="secondary" hidden>Cancel check</button></div></div><div id="stale" class="warning" hidden>Inputs or assessment rules changed. Run a new check before using these recommendations.</div><div id="run-state" aria-live="polite"></div><details class="source-coverage" open><summary>Source coverage</summary><div id="coverage"></div></details><div class="result-tools" id="result-tools" hidden><div class="result-search"><label for="result-search">Search results</label><input id="result-search" type="search" placeholder="Role or company"></div><label for="filter">Show</label><select id="filter"><option value="all">All recommendations</option><option>Worth reviewing</option><option>Conditional</option><option>Low priority</option><option value="unassessed">Assessment unavailable</option></select><p>Ordered by role fit and core evidence; preferences break ties. This is not a hiring probability.</p></div><div id="results"></div><details class="manual-intake"><summary>Add a public job description</summary><p class="help">If a careers page cannot be read, save its public text for review. This does not verify the vacancy or run automated matching.</p><form id="manual-form"><label for="manual-company">Selected company</label><select id="manual-company"></select><label for="manual-title">Job title</label><input id="manual-title" maxlength="250" required><label for="manual-url">Public vacancy URL</label><input id="manual-url" type="url" required><label for="manual-text">Public job description</label><textarea id="manual-text" rows="5" maxlength="40000" required></textarea><button type="submit">Save unverified description</button></form></details></section>
-<section id="saved-view" class="view" hidden aria-labelledby="saved-heading"><div class="section-heading result-header"><div><h2 id="saved-heading">Keep the next step in sight.</h2><p>Your decisions stay here when you run a new search.</p></div><button id="back-results" class="secondary">Browse results</button></div><div class="saved-tools"><div><label for="saved-search">Search saved jobs</label><input id="saved-search" type="search" placeholder="Role or company"></div><div><label for="saved-stage">Saved stage</label><select id="saved-stage"><option value="all">All stages</option><option value="saved">Saved</option><option value="applied">Applied</option><option value="interview">Interview</option><option value="offer">Offer</option><option value="rejected">Rejected</option><option value="withdrawn">Withdrawn</option><option value="archived">Archived</option></select></div></div><p class="help">Stages are reported by you. Saving a job or changing its stage does not send an application. Action dates do not create reminders.</p><div id="saved-jobs"></div></section>
-<section id="applications-view" class="view" hidden aria-labelledby="applications-heading"><div class="section-heading"><h2 id="applications-heading">Make the next conversation count.</h2><p>Prepare your application and keep correspondence with the role.</p></div><p class="warning">Test/manual workspace. No domain or mail provider connected. Nothing here sends an application or email.</p><label for="application-job">Saved opportunity</label><select id="application-job"></select><div id="application-empty" class="empty" hidden><p>Save a job in Results before preparing an application.</p><button class="secondary" id="application-find-job">Find a job to save</button></div><div id="application-workspace"><p id="application-stale" class="warning" hidden>This packet uses an earlier profile. Review it before applying.</p><details open><summary>Application packet</summary><form id="application-form"><label for="cv-version">CV version</label><input id="cv-version" maxlength="150" required placeholder="Product Manager · October 2026"><label for="cv-text">CV text</label><textarea id="cv-text" rows="5" maxlength="20000" placeholder="Paste the CV you want to use. Only confirmed experience."></textarea><label for="cv-files">CV / supporting files</label><input id="cv-files" type="file" accept=".pdf,.txt" multiple><p class="help">Up to two PDF or UTF-8 text files, 256 KiB each. Files are stored locally; no upload to an employer.</p><div id="packet-files"></div><label for="cover-letter">Cover letter</label><textarea id="cover-letter" rows="4" maxlength="10000"></textarea><label for="screening-answers">Screening answers</label><textarea id="screening-answers" rows="3" maxlength="10000" placeholder="Question: ...&#10;Answer: ..."></textarea><div class="actions"><button type="submit">Save application packet</button><button type="button" id="export-packet" class="secondary">Export saved packet</button><button type="button" id="reload-packet" class="text-button">Discard draft and reload packet</button></div></form><details><summary>Saved packet revisions</summary><div id="packet-history"></div></details></details><section class="conversation"><h3>Correspondence</h3><p id="test-alias" class="help"></p><button id="simulate-invitation" class="secondary">Simulate interview invitation</button><p class="help">Creates a labeled local test message. The preview address cannot receive mail.</p><div id="conversation-messages"></div></section><section id="reply-panel" hidden><h3>Reply draft</h3><form id="reply-form"><label for="reply-to">Reply recipient</label><input id="reply-to" readonly><label for="reply-body">Reply body</label><textarea id="reply-body" rows="4" maxlength="10000" required></textarea><div class="actions"><button type="submit">Save reply draft</button><button type="button" data-locked="true" disabled title="Connect a domain and verified mail provider first">Send email — not connected</button></div></form><p class="help">Review the starter draft and edit it before use. No availability, commitment or personal detail is invented.</p></section></div></section>
-<section id="inbox-view" class="view" hidden aria-labelledby="inbox-heading"><div class="section-heading"><h2 id="inbox-heading">What needs your attention.</h2><p>Next steps from saved roles and correspondence. You decide what happens next.</p></div><p class="help">Rule-based interpretation; review the original. Test mail cannot change a real application stage.</p><section aria-label="Saved job next actions"><h3>Next actions across saved roles</h3><p class="help">Dates use UTC calendar days. Packet readiness does not mean an application was sent.</p><div id="next-actions"></div></section><h3>Correspondence actions</h3><div id="attention-items"></div><h3>Unassigned correspondence</h3><div id="unassigned-messages"></div><details class="manual-intake"><summary>Add received email manually</summary><p class="help">Paste email text you are authorized to use. It remains manually supplied and unverified. No mailbox connection is created.</p><form id="mail-intake-form"><label for="mail-from">Sender email</label><input id="mail-from" type="email" required><label for="mail-to">Recipient email</label><input id="mail-to" type="email" required><label for="mail-subject">Email subject</label><input id="mail-subject" maxlength="250" required><label for="mail-text">Original email text</label><textarea id="mail-text" rows="5" maxlength="20000" required></textarea><button type="submit">Add unverified email</button></form></details></section>
-</div>
-<footer><span>Local workspace · synthetic examples by default</span><span>Employer sources. Explicit uncertainty. Your decision.</span></footer>
-</main></body></html>
+    <header class="masthead">
+      <a href="/" class="brand" aria-label="Rolemorrow home"
+        ><svg viewBox="0 0 24 24" width="25" height="25" aria-hidden="true">
+          <path
+            d="M4 17V5h12M8 20h12V8M4 5l16 15"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          /></svg
+        >Rolemorrow</a
+      ><span class="mode-label" id="mode-label">Fictional example · no external requests</span
+      ><a id="account-link" href="/account" hidden>My account</a>
+    </header>
+    <main>
+      <div class="workspace-heading">
+        <div>
+          <h1>Find work worth moving for.</h1>
+          <p>Your experience. Your employers. A considered next move.</p>
+        </div>
+        <button class="secondary" id="example" disabled>Use fictional example</button>
+      </div>
+      <nav aria-label="Search workspace">
+        <button data-tab="profile" aria-current="page">Profile &amp; goal</button
+        ><button data-tab="companies">Companies</button><button data-tab="results">Results</button
+        ><button data-tab="saved">Saved jobs</button
+        ><button data-tab="applications">Applications</button><button data-tab="inbox">Inbox</button
+        ><button data-tab="audit">Decision history</button>
+      </nav>
+      <section id="journey" class="journey" aria-label="Next step">
+        <div>
+          <strong id="journey-title"></strong>
+          <p id="journey-description"></p>
+        </div>
+        <button id="journey-action" class="secondary" disabled>Build your profile</button>
+      </section>
+      <div id="notice" role="status" aria-live="polite"></div>
+      <div class="workspace">
+        <aside>
+          <h2>Your search brief</h2>
+          <dl>
+            <dt>Target role</dt>
+            <dd id="brief-role">Not set</dd>
+            <dt>Work country</dt>
+            <dd id="brief-country">Not set</dd>
+            <dt>Companies</dt>
+            <dd id="brief-companies">None selected</dd>
+          </dl>
+          <p class="aside-note">
+            Recommendations show evidence and uncertainty. They do not predict an employer’s hiring
+            decision.
+          </p>
+          <button class="text-button danger" id="delete">Delete local data</button>
+          <div id="delete-confirm" hidden>
+            <p>
+              Delete your profile, companies, saved checks and saved jobs, including correspondence,
+              files, reply drafts and the app’s compatibility backups, from this computer?
+            </p>
+            <button class="danger secondary" id="confirm-delete">Confirm deletion</button
+            ><button class="text-button" id="keep-data">Keep data</button>
+          </div>
+        </aside>
+        <section id="profile-view" class="view" aria-labelledby="profile-heading">
+          <div class="section-heading">
+            <h2 id="profile-heading">A clear starting point.</h2>
+            <p>Your experience and your next step are separate inputs.</p>
+          </div>
+          <form id="profile-form">
+            <label for="facts">Confirmed experience</label>
+            <p class="help" id="facts-help">
+              One factual statement per line. Include what you owned, built or delivered. No contact
+              details needed.
+            </p>
+            <textarea
+              id="facts"
+              rows="5"
+              aria-describedby="facts-help"
+              placeholder="Led AI product evaluation and API platform launches."
+            ></textarea>
+            <div class="field-grid">
+              <div>
+                <label for="roles">Target roles</label
+                ><input id="roles" placeholder="Senior Product Manager" />
+              </div>
+              <div>
+                <label for="industries">Career domain context</label
+                ><input id="industries" placeholder="AI, fintech" />
+                <p class="help">
+                  Broad context for matching. Set ranking preferences in Career preferences below.
+                </p>
+              </div>
+              <div>
+                <label for="country">Base work country</label
+                ><input id="country" placeholder="Portugal" />
+                <p class="help">
+                  Use the country’s full name. Relocation options are separate preferences; “remote”
+                  alone does not establish eligibility.
+                </p>
+              </div>
+              <div>
+                <label for="work-mode">Required work mode</label
+                ><select id="work-mode">
+                  <option value="remote">Remote</option>
+                  <option value="hybrid">Hybrid</option>
+                  <option value="onsite">Onsite</option>
+                  <option value="any">Any work mode</option>
+                </select>
+              </div>
+            </div>
+            <details id="preferences-panel">
+              <summary>Career preferences</summary>
+              <p class="help">
+                Preferences change priority; they are separate from experience and eligibility. An
+                unanswered question does not create a filter.
+              </p>
+              <div class="field-grid">
+                <div>
+                  <label for="career-priority">Main career priority</label
+                  ><select id="career-priority">
+                    <option value="content">Role and work content first</option>
+                    <option value="balanced">Balance work and relocation</option>
+                    <option value="relocation">Relocation first</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="checkbox"
+                    ><input
+                      type="checkbox"
+                      id="leadership-required"
+                      aria-label="Leadership title required"
+                    />Leadership title required</label
+                  >
+                  <p class="help">
+                    Leave off if Senior/Lead individual contributor roles are also welcome.
+                  </p>
+                </div>
+                <div>
+                  <label for="relocations">Relocation destinations</label
+                  ><textarea
+                    id="relocations"
+                    rows="4"
+                    placeholder="Norway&#10;Luxembourg&#10;New Zealand&#10;United States?"
+                  ></textarea>
+                  <p class="help">
+                    One full country name per line. Add ? for a tentative destination. Moving does
+                    not establish work rights.
+                  </p>
+                </div>
+                <div>
+                  <label for="office-policy">Office preference</label
+                  ><select id="office-policy">
+                    <option value="neutral">No preference penalty</option>
+                    <option value="deprioritize">Mandatory office lowers priority</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="salary-country">Salary target country</label
+                  ><input id="salary-country" placeholder="Portugal" />
+                </div>
+                <div>
+                  <label for="salary-currency">Salary currency</label
+                  ><select id="salary-currency">
+                    <option>EUR</option>
+                    <option>USD</option>
+                    <option>GBP</option>
+                    <option>NOK</option>
+                    <option>NZD</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="salary-min">Target annual minimum</label
+                  ><input
+                    id="salary-min"
+                    type="number"
+                    min="0"
+                    max="10000000"
+                    step="1000"
+                    placeholder="100000"
+                  />
+                </div>
+                <div>
+                  <label for="salary-max">Target annual maximum</label
+                  ><input
+                    id="salary-max"
+                    type="number"
+                    min="0"
+                    max="10000000"
+                    step="1000"
+                    placeholder="120000"
+                  />
+                </div>
+                <div>
+                  <label for="salary-basis">Compensation basis</label
+                  ><select id="salary-basis">
+                    <option value="pending">Needs clarification</option>
+                    <option value="base">Fixed base; bonus on top</option>
+                    <option value="total">Total cash including bonus</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="salary-policy">Below-target salary</label
+                  ><select id="salary-policy">
+                    <option value="pending">Needs confirmation</option>
+                    <option value="soft">Lower priority; keep eligible</option>
+                    <option value="hard">Exclude below target</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="salary-unknown">Unpublished salary</label
+                  ><select id="salary-unknown">
+                    <option value="pending">Needs confirmation</option>
+                    <option value="keep">Keep; clarify with employer</option>
+                    <option value="exclude">Exclude</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="preferred-themes">Preferred work themes</label
+                  ><input id="preferred-themes" placeholder="AI-native, cutting-edge AI" /><label
+                    class="checkbox"
+                    ><input type="checkbox" id="themes-confirmed" />Themes confirmed</label
+                  >
+                </div>
+                <div>
+                  <label for="preferred-industries">Preferred industries</label
+                  ><input id="preferred-industries" placeholder="fintech, edtech, regtech" />
+                </div>
+                <div>
+                  <label for="disfavored-industries">Lower-priority industries</label
+                  ><input id="disfavored-industries" placeholder="Leave empty if none" /><label
+                    class="checkbox"
+                    ><input type="checkbox" id="industries-confirmed" />Industry preferences
+                    confirmed</label
+                  >
+                </div>
+              </div>
+              <p class="help">
+                Amounts mean gross annual pay for the selected country only; confirm whether your
+                target is base salary or total cash. Foreign currency or an unclear pay period is
+                not silently converted. Industry and theme boosts use your employer tags, not
+                assumptions from job titles.
+              </p>
+            </details>
+            <section id="intake-questions" hidden aria-label="Questions still to answer">
+              <h3>Still to clarify</h3>
+              <ul></ul>
+            </section>
+            <div class="form-footer">
+              <p>Saved on this computer. Nothing is sent while you edit.</p>
+              <button type="submit" disabled>Save profile</button>
+            </div>
+          </form>
+        </section>
+        <section id="companies-view" class="view" hidden aria-labelledby="companies-heading">
+          <div class="section-heading">
+            <h2 id="companies-heading">Start with employers you care about.</h2>
+            <p>
+              Choose up to five. We check their own careers pages and the hiring systems linked from
+              those pages.
+            </p>
+          </div>
+          <section
+            id="vacancy-browser"
+            class="organization-catalog"
+            hidden
+            aria-labelledby="vacancy-browser-heading"
+          >
+            <details>
+              <summary id="vacancy-browser-heading">
+                Search cached vacancies across companies
+              </summary>
+              <p>
+                Combine filters for a narrower search. Categories come from titles and source
+                metadata; skills are mentions in the saved text. Remote does not confirm eligibility
+                in your country. Coverage is partial.
+              </p>
+              <form>
+                <label for="vacancy-query">Keywords in title, company or description</label
+                ><input id="vacancy-query" name="q" type="search" maxlength="200" />
+                <div class="catalog-filters">
+                  <label
+                    >Specialization<select name="role">
+                      <option value="">All specializations</option>
+                      <option value="backend">Backend</option>
+                      <option value="frontend">Frontend</option>
+                      <option value="full-stack">Full stack</option>
+                      <option value="platform-sre">Platform, SRE &amp; DevOps</option>
+                      <option value="data">Data &amp; analytics</option>
+                      <option value="ai-ml">AI &amp; machine learning</option>
+                      <option value="mobile">Mobile</option>
+                      <option value="security">Security</option>
+                      <option value="qa">QA &amp; testing</option>
+                      <option value="product">Product management</option>
+                      <option value="design">Design</option>
+                      <option value="sales">Sales</option>
+                      <option value="marketing">Marketing</option>
+                      <option value="support">Customer support &amp; success</option>
+                      <option value="engineering">Engineering</option>
+                      <option value="unknown">Not specified</option>
+                    </select></label
+                  ><label
+                    >Level<select name="level">
+                      <option value="">All levels</option>
+                      <option value="intern">Intern</option>
+                      <option value="junior">Junior</option>
+                      <option value="senior">Senior</option>
+                      <option value="staff">Staff</option>
+                      <option value="principal">Principal</option>
+                      <option value="lead">Lead</option>
+                      <option value="manager">Manager or director</option>
+                      <option value="unknown">Not specified</option>
+                    </select></label
+                  ><label
+                    >Work format<select name="workMode">
+                      <option value="">All formats</option>
+                      <option value="remote">Remote</option>
+                      <option value="hybrid">Hybrid</option>
+                      <option value="onsite">On site</option>
+                      <option value="unknown">Not specified</option>
+                    </select></label
+                  >
+                </div>
+                <div class="catalog-filters">
+                  <label
+                    >Skill mentions, separated by commas<input
+                      name="skills"
+                      maxlength="500"
+                      placeholder="python, kubernetes" /></label
+                  ><label
+                    >Match skills<select name="skillMatch">
+                      <option value="all">All listed skills</option>
+                      <option value="any">Any listed skill</option>
+                    </select></label
+                  ><label
+                    >Location contains<input name="location" maxlength="200" placeholder="Portugal"
+                  /></label>
+                </div>
+                <details>
+                  <summary>More filters</summary>
+                  <div class="catalog-filters">
+                    <label
+                      >Industry<select name="industry">
+                        <option value="">All industries</option>
+                        <option value="ai">AI and language technology</option>
+                        <option value="cloud">Cloud and infrastructure</option>
+                        <option value="data">Data and analytics</option>
+                        <option value="developer">Developer tools</option>
+                        <option value="security">Cybersecurity</option>
+                        <option value="design">Design and research</option>
+                        <option value="business">Business and collaboration</option>
+                        <option value="fintech">Financial technology</option>
+                        <option value="commerce">Commerce technology</option>
+                        <option value="media">Media and communication</option>
+                        <option value="hardware">Hardware and semiconductors</option>
+                        <option value="unknown">Not specified</option>
+                      </select></label
+                    ><label
+                      >Employment type<select name="employmentType">
+                        <option value="">All types</option>
+                        <option value="full-time">Full time</option>
+                        <option value="part-time">Part time</option>
+                        <option value="contract">Contract</option>
+                        <option value="internship">Internship</option>
+                        <option value="temporary">Temporary</option>
+                        <option value="unknown">Not specified</option>
+                      </select></label
+                    ><label
+                      >Availability<select name="status">
+                        <option value="active">Listed at last check</option>
+                        <option value="">All statuses</option>
+                        <option value="unknown">Unconfirmed</option>
+                        <option value="unavailable">Check failed</option>
+                        <option value="not-listed">No longer listed</option>
+                        <option value="expired">Deadline passed</option>
+                      </select></label
+                    ><label
+                      >Exclude words or phrases, separated by commas<input
+                        name="exclude"
+                        maxlength="500"
+                    /></label>
+                  </div>
+                  <div class="catalog-filters">
+                    <label
+                      >Salary information<select name="salaryDisclosed">
+                        <option value="">Any disclosure</option>
+                        <option value="yes">Structured salary supplied</option>
+                      </select></label
+                    ><label
+                      >Salary range reaches at least<input
+                        name="salaryMin"
+                        type="number"
+                        min="0"
+                        step="any"
+                        placeholder="100000" /></label
+                    ><label
+                      >Currency<select name="currency">
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="GBP">GBP</option>
+                        <option value="CAD">CAD</option>
+                        <option value="AUD">AUD</option>
+                      </select></label
+                    ><label
+                      >Pay period<select name="salaryInterval">
+                        <option value="1 YEAR">Year</option>
+                        <option value="1 MONTH">Month</option>
+                        <option value="1 HOUR">Hour</option>
+                      </select></label
+                    >
+                  </div>
+                  <p class="help">
+                    Salary filters use structured source ranges only, without currency conversion. A
+                    range reaching your minimum does not guarantee that offer.
+                  </p>
+                </details>
+                <div class="actions">
+                  <button type="submit" class="secondary">Search vacancies</button
+                  ><button type="reset" class="text-button">Reset vacancy filters</button>
+                </div>
+              </form>
+              <p role="status" aria-live="polite"></p>
+              <div class="vacancy-results"></div>
+              <button type="button" class="secondary" data-more hidden>
+                More matching vacancies
+              </button>
+            </details>
+          </section>
+          <section
+            id="organization-catalog"
+            class="organization-catalog"
+            aria-labelledby="catalog-heading"
+            hidden
+          >
+            <h2 id="catalog-heading">Company catalog</h2>
+            <p>
+              Choose a company with a reviewed official source, or enter one below. Hiring
+              observations do not establish eligibility for your location. Company searches and
+              sources you save help grow this public catalog after verification; your identity and
+              career profile remain private.
+            </p>
+            <form>
+              <label for="catalog-query">Company name or domain</label
+              ><input id="catalog-query" type="search" maxlength="200" autocomplete="off" />
+              <div class="catalog-filters">
+                <label
+                  >Industry<select id="catalog-industry">
+                    <option value="">All industries</option>
+                  </select></label
+                ><label
+                  >Team size<select id="catalog-size">
+                    <option value="">All sizes</option>
+                  </select></label
+                >
+              </div>
+              <button type="submit" class="secondary">Search companies</button>
+            </form>
+            <p role="status" aria-live="polite"></p>
+            <ul aria-label="Company catalog results"></ul>
+          </section>
+          <form id="companies-form">
+            <label for="company-sources">Company sources</label>
+            <p class="help" id="company-help">
+              One company per line: name | official homepage | official careers page | industry
+              (optional).
+            </p>
+            <textarea
+              id="company-sources"
+              rows="7"
+              aria-describedby="company-help"
+              spellcheck="false"
+              placeholder="Company | https://company.com | https://company.com/careers | AI"
+            ></textarea>
+            <p class="help">
+              Use the company’s own careers URL here. An ATS address is accepted only after an
+              official company page links to it.
+            </p>
+            <div class="form-footer">
+              <p>Industry preferences inform the explanation; they are not hard exclusions.</p>
+              <button type="submit" disabled>Save companies</button>
+            </div>
+          </form>
+          <div class="run-controls">
+            <h3>Choose how to check</h3>
+            <label for="mode">Search mode</label
+            ><select id="mode">
+              <option value="fixture">Fictional example — no external requests</option>
+              <option value="live" disabled>Live sources + NVIDIA — not configured</option>
+            </select>
+            <p id="live-note" class="help">
+              Live checking is disabled until server access, API keys and an explicit NVIDIA model
+              are configured.
+            </p>
+            <div id="sharing" hidden>
+              <label class="checkbox"
+                ><input type="checkbox" id="consent" />I approve sending this saved profile and
+                career goal to Nebius, and company search queries to Tavily. Provider retention
+                policies apply.</label
+              >
+            </div>
+            <div class="actions">
+              <button id="scan" aria-describedby="scan-help search-budget" disabled>
+                Check selected companies
+              </button>
+            </div>
+            <p id="scan-help" class="help" aria-live="polite">
+              Save your profile and employer sources to begin.
+            </p>
+            <p id="search-budget" class="help">Partial checks are labelled.</p>
+          </div>
+        </section>
+        <section id="results-view" class="view" hidden aria-labelledby="results-heading">
+          <div class="section-heading result-header">
+            <div>
+              <h2 id="results-heading">Your opportunities.</h2>
+              <p id="run-summary">Save a profile and select companies to begin.</p>
+            </div>
+            <div class="result-actions">
+              <button class="secondary" id="review-sources">Edit company sources</button
+              ><button id="cancel" class="secondary" hidden>Cancel check</button>
+            </div>
+          </div>
+          <div id="stale" class="warning" hidden>
+            Inputs or assessment rules changed. Run a new check before using these recommendations.
+          </div>
+          <div id="run-state" aria-live="polite"></div>
+          <details class="source-coverage" open>
+            <summary>Source coverage</summary>
+            <div id="coverage"></div>
+          </details>
+          <div class="result-tools" id="result-tools" hidden>
+            <div class="result-search">
+              <label for="result-search">Search results</label
+              ><input id="result-search" type="search" placeholder="Role or company" />
+            </div>
+            <label for="filter">Show</label
+            ><select id="filter">
+              <option value="all">All recommendations</option>
+              <option>Worth reviewing</option>
+              <option>Conditional</option>
+              <option>Low priority</option>
+              <option value="unassessed">Assessment unavailable</option>
+            </select>
+            <p>
+              Ordered by role fit and core evidence; preferences break ties. This is not a hiring
+              probability.
+            </p>
+          </div>
+          <div id="results"></div>
+          <details class="manual-intake">
+            <summary>Add a public job description</summary>
+            <p class="help">
+              If a careers page cannot be read, save its public text for review. This does not
+              verify the vacancy or run automated matching.
+            </p>
+            <form id="manual-form">
+              <label for="manual-company">Selected company</label
+              ><select id="manual-company"></select
+              ><label for="manual-title">Job title</label
+              ><input id="manual-title" maxlength="250" required /><label for="manual-url"
+                >Public vacancy URL</label
+              ><input id="manual-url" type="url" required /><label for="manual-text"
+                >Public job description</label
+              ><textarea id="manual-text" rows="5" maxlength="40000" required></textarea
+              ><button type="submit">Save unverified description</button>
+            </form>
+          </details>
+        </section>
+        <section id="saved-view" class="view" hidden aria-labelledby="saved-heading">
+          <div class="section-heading result-header">
+            <div>
+              <h2 id="saved-heading">Keep the next step in sight.</h2>
+              <p>Your decisions stay here when you run a new search.</p>
+            </div>
+            <button id="back-results" class="secondary">Browse results</button>
+          </div>
+          <details class="manual-intake" id="url-intake" open>
+            <summary>Save a vacancy from any public link</summary>
+            <p class="help">
+              Found a role elsewhere? Save it here without setting up a profile or company. Links
+              and pasted descriptions remain unverified; no matching or application is sent.
+            </p>
+            <form id="url-form">
+              <label for="external-url">Public vacancy URL</label
+              ><input
+                id="external-url"
+                type="url"
+                required
+                placeholder="https://employer.com/jobs/role"
+              />
+              <div class="field-grid">
+                <div>
+                  <label for="external-title">Job title (optional)</label
+                  ><input id="external-title" maxlength="250" />
+                </div>
+                <div>
+                  <label for="external-company">Company (optional)</label
+                  ><input id="external-company" maxlength="100" />
+                </div>
+              </div>
+              <details>
+                <summary>Add the public description</summary>
+                <label for="external-text">Description (optional)</label
+                ><textarea id="external-text" rows="5" maxlength="40000"></textarea>
+              </details>
+              <label class="checkbox"
+                ><input id="external-read" type="checkbox" />Read this public URL to fill missing
+                details. I approve contacting that source; no profile is transmitted.</label
+              >
+              <p class="help" id="external-read-note">
+                Reading requires live access enabled on the server. Saving the link alone makes no
+                external request.
+              </p>
+              <button type="submit">Save vacancy link</button>
+            </form>
+          </details>
+          <div class="saved-tools">
+            <div>
+              <label for="saved-search">Search saved jobs</label
+              ><input id="saved-search" type="search" placeholder="Role or company" />
+            </div>
+            <div>
+              <label for="saved-stage">Saved stage</label
+              ><select id="saved-stage">
+                <option value="all">All stages</option>
+                <option value="saved">Saved</option>
+                <option value="applied">Applied</option>
+                <option value="interview">Interview</option>
+                <option value="offer">Offer</option>
+                <option value="rejected">Rejected</option>
+                <option value="withdrawn">Withdrawn</option>
+                <option value="archived">Archived</option>
+              </select>
+            </div>
+          </div>
+          <p class="help">
+            Stages are reported by you. Saving a job or changing its stage does not send an
+            application. Action dates do not create reminders.
+          </p>
+          <div id="saved-jobs"></div>
+        </section>
+        <section id="applications-view" class="view" hidden aria-labelledby="applications-heading">
+          <div class="section-heading">
+            <h2 id="applications-heading">Make the next conversation count.</h2>
+            <p>Prepare your application and keep correspondence with the role.</p>
+          </div>
+          <p id="mail-transport-status" class="warning">
+            Mail provider not connected. Live sending and reception are disabled.
+          </p>
+          <label for="application-job">Saved opportunity</label
+          ><select id="application-job"></select>
+          <div id="application-empty" class="empty" hidden>
+            <p>Save a job in Results before preparing an application.</p>
+            <button class="secondary" id="application-find-job">Find a job to save</button>
+          </div>
+          <div id="application-workspace">
+            <button type="button" id="application-audit" class="text-button">
+              Decision history
+            </button>
+            <p id="application-stale" class="warning" hidden>
+              This packet uses an earlier profile. Review it before applying.
+            </p>
+            <section aria-labelledby="prepare-heading">
+              <h3 id="prepare-heading">Prepare from your saved profile</h3>
+              <p class="help">
+                Use confirmed profile facts and this saved vacancy to prepare an editable CV, cover
+                letter and answers. Review the wording and missing information before saving.
+                Preparation does not send an application.
+              </p>
+              <label for="prepare-questions">Employer questions (optional)</label
+              ><textarea
+                id="prepare-questions"
+                rows="3"
+                maxlength="10009"
+                aria-describedby="prepare-questions-help"
+              ></textarea>
+              <p id="prepare-questions-help" class="help">
+                Paste up to 10 questions, one per line, up to 1,000 characters each. Leave blank if
+                the employer has not supplied questions.
+              </p>
+              <label class="checkbox"
+                ><input id="prepare-consent" type="checkbox" />I approve using my saved profile and
+                this vacancy to prepare this draft. When AI preparation is connected, these inputs
+                and questions are sent to the configured model.</label
+              >
+              <div class="actions">
+                <button id="prepare-packet" type="button">Prepare from saved profile</button
+                ><button id="prepare-cancel" type="button" class="secondary" hidden>
+                  Cancel preparation
+                </button>
+              </div>
+              <p id="prepare-status" class="help" role="status" aria-live="polite">
+                Save confirmed facts in your profile before preparing.
+              </p>
+              <details id="prepare-provenance" hidden>
+                <summary>Draft sources and method</summary>
+                <div id="prepare-sources"></div>
+              </details>
+            </section>
+            <details open>
+              <summary>Application packet</summary>
+              <form id="application-form">
+                <label for="cv-version">CV version</label
+                ><input
+                  id="cv-version"
+                  maxlength="150"
+                  required
+                  placeholder="Product Manager · October 2026"
+                /><label for="cv-text">CV text</label
+                ><textarea
+                  id="cv-text"
+                  rows="5"
+                  maxlength="20000"
+                  placeholder="Paste the CV you want to use. Only confirmed experience."
+                ></textarea
+                ><label for="cv-files">CV / supporting files</label
+                ><input id="cv-files" type="file" accept=".pdf,.txt" multiple />
+                <p class="help">
+                  Up to two PDF or UTF-8 text files, 256 KiB each. Saving keeps files in your
+                  workspace. Sending an email includes the saved attachments only after your
+                  confirmation.
+                </p>
+                <div id="packet-files"></div>
+                <label for="cover-letter">Cover letter</label
+                ><textarea id="cover-letter" rows="4" maxlength="10000"></textarea
+                ><label for="screening-answers">Screening answers</label
+                ><textarea
+                  id="screening-answers"
+                  rows="3"
+                  maxlength="10000"
+                  placeholder="Question: ...&#10;Answer: ..."
+                ></textarea>
+                <div class="actions">
+                  <button type="submit">Save application packet</button
+                  ><button type="button" id="export-packet" class="secondary">
+                    Export saved packet</button
+                  ><button type="button" id="reload-packet" class="text-button">
+                    Discard draft and reload packet
+                  </button>
+                </div>
+              </form>
+              <details>
+                <summary>Saved packet revisions</summary>
+                <div id="packet-history"></div>
+              </details>
+            </details>
+            <section aria-labelledby="application-email-heading">
+              <h3 id="application-email-heading">Send an application email</h3>
+              <p class="help">
+                Send only to an employer address you have checked. The email includes your message
+                plus the saved CV, cover letter, screening answers and attachments. It does not
+                complete an employer’s application form.
+              </p>
+              <form id="application-email-form">
+                <label for="application-email-to">Employer email address</label
+                ><input id="application-email-to" type="email" maxlength="254" required /><label
+                  for="application-email-subject"
+                  >Application email subject</label
+                ><input id="application-email-subject" maxlength="250" required /><label
+                  for="application-email-body"
+                  >Application email body</label
+                ><textarea
+                  id="application-email-body"
+                  rows="5"
+                  maxlength="10000"
+                  required
+                ></textarea>
+                <details>
+                  <summary>Saved packet to include</summary>
+                  <div id="application-email-packet"></div>
+                </details>
+                <label class="checkbox"
+                  ><input
+                    id="application-email-confirm"
+                    aria-describedby="application-send-help"
+                    type="checkbox"
+                  />I reviewed this recipient, email and saved packet. Send this application
+                  email.</label
+                >
+                <div class="actions">
+                  <button
+                    id="application-send"
+                    aria-describedby="application-send-help"
+                    type="submit"
+                    disabled
+                  >
+                    Send application email — not connected</button
+                  ><button id="clear-application-email" type="button" class="text-button">
+                    Clear application email draft
+                  </button>
+                </div>
+                <p id="application-send-help" class="help">
+                  Save a packet and connect a verified mail provider before sending.
+                </p>
+              </form>
+            </section>
+            <section aria-labelledby="mail-delivery-heading">
+              <h3 id="mail-delivery-heading">Email delivery history</h3>
+              <button id="refresh-email-status" class="text-button">Refresh email status</button>
+              <div id="mail-deliveries"></div>
+            </section>
+            <section class="conversation">
+              <h3>Correspondence</h3>
+              <p id="test-alias" class="help"></p>
+              <details id="test-mail-tools">
+                <summary>Try local test correspondence</summary>
+                <button id="simulate-invitation" class="secondary">
+                  Simulate interview invitation
+                </button>
+                <p class="help">
+                  Creates a labeled local test message. It is separate from your received email and
+                  cannot send a real reply.
+                </p>
+              </details>
+              <div id="conversation-messages"></div>
+            </section>
+            <section id="reply-panel" hidden>
+              <h3>Reply draft</h3>
+              <form id="reply-form">
+                <label for="reply-to">Reply recipient</label><input id="reply-to" readonly /><label
+                  for="reply-body"
+                  >Reply body</label
+                ><textarea id="reply-body" rows="4" maxlength="10000" required></textarea>
+                <div class="actions">
+                  <button type="submit">Save reply draft</button
+                  ><button
+                    type="button"
+                    id="reply-send"
+                    aria-describedby="reply-send-help"
+                    disabled
+                  >
+                    Send email — not connected
+                  </button>
+                </div>
+              </form>
+              <label class="checkbox"
+                ><input
+                  id="reply-send-confirm"
+                  aria-describedby="reply-send-help"
+                  type="checkbox"
+                />I reviewed the saved reply and recipient. Send this reply email.</label
+              >
+              <p id="reply-send-help" class="help">
+                Save your reviewed reply first. No availability, commitment or personal detail is
+                invented.
+              </p>
+            </section>
+          </div>
+        </section>
+        <section id="inbox-view" class="view" hidden aria-labelledby="inbox-heading">
+          <div class="section-heading">
+            <h2 id="inbox-heading">What needs your attention.</h2>
+            <p>Next steps from saved roles and correspondence. You decide what happens next.</p>
+          </div>
+          <p class="help">
+            Rule-based interpretation; review the original. Test mail cannot change a real
+            application stage.
+          </p>
+          <section aria-label="Saved job next actions">
+            <h3>Next actions across saved roles</h3>
+            <p class="help">
+              Dates use UTC calendar days. Packet readiness does not mean an application was sent.
+            </p>
+            <div id="next-actions"></div>
+          </section>
+          <section aria-labelledby="email-notifications-heading">
+            <h3 id="email-notifications-heading">Email notifications</h3>
+            <p class="help">
+              Reading a notification does not complete a task or change an application stage.
+            </p>
+            <button id="refresh-email-notifications" class="text-button">
+              Refresh email notifications
+            </button>
+            <div id="email-notifications"></div>
+          </section>
+          <h3>Correspondence actions</h3>
+          <div id="attention-items"></div>
+          <h3>Unassigned correspondence</h3>
+          <div id="unassigned-messages"></div>
+          <details class="manual-intake">
+            <summary>Add received email manually</summary>
+            <p class="help">
+              Paste email text you are authorized to use. It remains manually supplied and
+              unverified. No mailbox connection is created.
+            </p>
+            <form id="mail-intake-form">
+              <label for="mail-from">Sender email</label
+              ><input id="mail-from" type="email" required /><label for="mail-to"
+                >Recipient email</label
+              ><input id="mail-to" type="email" required /><label for="mail-subject"
+                >Email subject</label
+              ><input id="mail-subject" maxlength="250" required /><label for="mail-text"
+                >Original email text</label
+              ><textarea id="mail-text" rows="5" maxlength="20000" required></textarea
+              ><button type="submit">Add unverified email</button>
+            </form>
+          </details>
+        </section>
+        <section id="audit-view" class="view" hidden aria-labelledby="audit-heading">
+          <div class="section-heading">
+            <h2 id="audit-heading">Decision history</h2>
+            <p>
+              Recorded inputs, agent judgements and your actions. A proposal is not human approval
+              or proof of an employer outcome.
+            </p>
+          </div>
+          <p id="audit-status" class="help" role="status" aria-live="polite"></p>
+          <p id="audit-capacity" class="warning"></p>
+          <p id="audit-error" class="warning" role="alert"></p>
+          <div class="field-grid">
+            <div>
+              <label for="audit-agent">Agent or role filter</label
+              ><input id="audit-agent" type="search" maxlength="100" />
+            </div>
+            <div>
+              <label for="audit-attempt">Application attempt ID</label
+              ><input id="audit-attempt" maxlength="200" />
+            </div>
+          </div>
+          <label class="checkbox"
+            ><input id="audit-errors" type="checkbox" />Show errors, rejections and interruptions in
+            loaded events</label
+          >
+          <div class="actions">
+            <button id="audit-refresh" type="button" class="secondary">
+              Refresh decision history</button
+            ><button id="audit-export" type="button" class="secondary">
+              Export private history JSONL
+            </button>
+          </div>
+          <p id="audit-empty" class="help" hidden></p>
+          <ol id="audit-events" class="audit-timeline"></ol>
+          <button id="audit-more" type="button" class="secondary" hidden>Load more history</button>
+        </section>
+      </div>
+      <footer>
+        <span id="workspace-storage">Local workspace · synthetic examples by default</span
+        ><span>Employer sources. Explicit uncertainty. Your decision.</span>
+      </footer>
+    </main>
+  </body>
+</html>

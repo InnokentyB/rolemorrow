@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import {mkdtemp,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {createServer} from '../app/server.mjs';
+import {chromium} from './browser.mjs';
+const dir=await mkdtemp(join(tmpdir(),'url-intake-browser-'));
+const server=createServer({storeFile:join(dir,'state.json'),env:{}});
+await new Promise(r=>server.listen(0,'127.0.0.1',r));
+const browser=await chromium.launch({headless:true});
+try{
+ const page=await browser.newPage({viewport:{width:1440,height:1000}});
+ const base=`http://127.0.0.1:${server.address().port}`;
+ await page.goto(base);await page.getByRole('button',{name:'Saved jobs',exact:true}).click();
+ await page.locator('#external-url').fill('https://employer.example/jobs/42?utm_source=board');
+ await page.locator('#external-title').fill('Product Manager');
+ await page.locator('#external-company').fill('Example employer');
+ await page.getByRole('button',{name:'Save vacancy link',exact:true}).click();
+ await page.getByRole('status').filter({hasText:'Vacancy saved as unverified.'}).waitFor();
+ assert.equal(await page.locator('.saved-job').count(),1);
+ assert.equal(await page.locator('.saved-job').getByRole('button',{name:'Check vacancy source',exact:true}).isDisabled(),true);
+ let state=await(await page.request.get(base+'/api/state')).json();assert.equal(state.profile,null);assert.equal(state.run,null);
+ await page.locator('#external-url').fill('https://employer.example/jobs/42#apply');
+ await page.getByRole('button',{name:'Save vacancy link',exact:true}).click();await page.getByRole('status').filter({hasText:'already saved'}).waitFor();assert.equal(await page.locator('.saved-job').count(),1);
+ await page.locator('#external-title').fill('Keep this draft title');await page.locator('#external-company').fill('Keep this employer');await page.locator('#external-url').fill('http://localhost/private');await page.getByRole('button',{name:'Save vacancy link',exact:true}).click();await page.getByRole('status').filter({hasText:'Unsafe source URL'}).waitFor();assert.equal(await page.locator('#external-url').inputValue(),'http://localhost/private');assert.equal(await page.locator('#external-title').inputValue(),'Keep this draft title');assert.equal(await page.locator('#external-company').inputValue(),'Keep this employer');
+ await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+ await page.locator('#external-url').fill('https://employer.example/jobs/next');await page.getByRole('button',{name:'Save vacancy link',exact:true}).click();await page.getByRole('status').filter({hasText:'Vacancy saved as unverified.'}).waitFor();assert.equal(await page.locator('.saved-job').count(),2);
+ state=await(await page.request.get(base+'/api/state')).json();assert.equal(state.run,null);assert.equal(state.opportunities[0].snapshot.assessment,null);
+ console.log('URL intake desktop/mobile: fresh workspace, duplicate, validation/recovery, unverified provenance PASS');
+}finally{await browser.close();await new Promise(r=>server.close(r));await rm(dir,{recursive:true,force:true});}

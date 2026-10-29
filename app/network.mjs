@@ -13,13 +13,17 @@ export function validatePublicUrl(value){
  if(u.protocol!=='https:'||u.username||u.password||u.port&&u.port!=='443'||h==='localhost'||h.endsWith('.localhost')||h.endsWith('.local')||!h.includes('.')&&!isIP(h)||isIP(h)&&!publicAddress(h))throw new Error('Unsafe source URL.');
  return u;
 }
-export async function safeFetch(value,{signal,lookup=dnsLookup,transport=fetch,maxBytes=1024*1024,headers={},method='GET',body}={}){
- const timed=AbortSignal.timeout(20000);const combined=signal?AbortSignal.any([signal,timed]):timed;
+export async function safeFetch(value,{signal,lookup=dnsLookup,transport=fetch,maxBytes=1024*1024,headers={},method='GET',body,timeoutMs=20000,beforeRedirect}={}){
+ if(!Number.isInteger(timeoutMs)||timeoutMs<1||timeoutMs>120000)throw Error('Invalid bounded request timeout.');
+ const timed=AbortSignal.timeout(timeoutMs);const combined=signal?AbortSignal.any([signal,timed]):timed;
  let u=validatePublicUrl(value);
  for(let hop=0;hop<6;hop++){
   combined.throwIfAborted();
   const hostname=u.hostname.replace(/^\[|\]$/g,'');
-  const resolved=isIP(hostname)?[{address:hostname,family:isIP(hostname)}]:await Promise.race([lookup(hostname,{all:true,verbatim:true}),new Promise((_,reject)=>combined.addEventListener('abort',()=>reject(new Error('Source request cancelled or timed out.')),{once:true}))]);
+  let resolved,abortLookup;
+  try{resolved=isIP(hostname)?[{address:hostname,family:isIP(hostname)}]:await Promise.race([lookup(hostname,{all:true,verbatim:true}),new Promise((_,reject)=>{abortLookup=()=>reject(combined.reason);combined.addEventListener('abort',abortLookup,{once:true});if(combined.aborted)abortLookup();})]);}
+  catch{if(signal?.aborted)throw signal.reason;throw Object.assign(new Error('Source request failed or timed out.'),{code:timed.aborted?'SOURCE_TIMEOUT':'SOURCE_NETWORK_ERROR'});}
+  finally{if(abortLookup)combined.removeEventListener('abort',abortLookup);}
   // DNS can return dotted IPv4-mapped aliases alongside public IPv4. Normalize
   // only this exact form before validation/pinning; URL literals remain prohibited.
   const addresses=resolved.map(a=>{const tail=/^::ffff:(\d+\.\d+\.\d+\.\d+)$/i.exec(a.address)?.[1];return tail&&isIP(tail)===4?{address:tail,family:4}:a;});
@@ -27,12 +31,12 @@ export async function safeFetch(value,{signal,lookup=dnsLookup,transport=fetch,m
   const agent=new Agent({connect:{lookup:(_host,options,cb)=>{const selected=addresses.filter(a=>!options.family||a.family===options.family);if(!selected.length)return cb(new Error('No permitted address.'));if(options.all)cb(null,selected);else cb(null,selected[0].address,selected[0].family);}}});
   try{
    const response=await transport(u.href,{signal:combined,dispatcher:agent,redirect:'manual',headers,method,body});
-   if([301,302,303,307,308].includes(response.status)){if(method!=='GET'){await response.body?.cancel();throw new Error('Source POST redirect refused.');}const location=response.headers.get('location');await response.body?.cancel();if(!location)throw new Error('Source redirect missing destination.');u=validatePublicUrl(new URL(location,u).href);continue;}
-   if(!response.ok){await response.body?.cancel();throw new Error(`Source request failed (${response.status}).`);}
+   if([301,302,303,307,308].includes(response.status)){if(method!=='GET'){await response.body?.cancel();throw new Error('Source POST redirect refused.');}const location=response.headers.get('location');await response.body?.cancel();if(!location)throw new Error('Source redirect missing destination.');const next=validatePublicUrl(new URL(location,u).href);if(beforeRedirect)await beforeRedirect(next.href,u.href);u=next;continue;}
+   if(!response.ok){await response.body?.cancel();throw Object.assign(new Error(`Source request failed (${response.status}).`),{status:response.status});}
    if(Number(response.headers.get('content-length'))>maxBytes){await response.body?.cancel();throw new Error('Source response exceeds size limit.');}
    const chunks=[];let size=0;for await(const chunk of response.body??[]){size+=chunk.byteLength;if(size>maxBytes){throw new Error('Source response exceeds size limit.');}chunks.push(Buffer.from(chunk));}
    return {text:Buffer.concat(chunks).toString('utf8'),url:u.href,status:response.status};
-  }catch(error){if(error.message?.startsWith('Source')||error.message?.startsWith('Unsafe'))throw error;throw new Error('Source request failed or timed out.');}finally{await agent.close();}
+  }catch(error){if(signal?.aborted)throw signal.reason; if(timed.aborted)throw Object.assign(new Error('Source request failed or timed out.'),{code:'SOURCE_TIMEOUT'});if(error.message?.startsWith('Source')||error.message?.startsWith('Unsafe'))throw error;throw Object.assign(new Error('Source request failed or timed out.'),{code:'SOURCE_NETWORK_ERROR'});}finally{await agent.close();}
  }
  throw new Error('Source redirect limit exceeded.');
 }

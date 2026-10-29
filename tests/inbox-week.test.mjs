@@ -1,0 +1,47 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp, rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {createServer} from '../app/server.mjs';
+import {profile, companies, providers} from './fixtures.mjs';
+import {nextActions} from '../public/actions.js';
+
+// Seven simulated calendar days, disposable API store, no mail/provider transport.
+test('IW01 seven-day Inbox journey preserves decisions and completes/reopens work across restart', async t => {
+ const dir=await mkdtemp(join(tmpdir(),'inbox-week-'));
+ const storeFile=join(dir,'state.json'); let server, url;
+ const open=async()=>{server=createServer({storeFile,providers:providers(),env:{}});await new Promise(r=>server.listen(0,'127.0.0.1',r));url=`http://127.0.0.1:${server.address().port}`;};
+ await open();t.after(async()=>{await new Promise(r=>server.close(r));await rm(dir,{recursive:true,force:true});});
+ const call=async(path,body,method='POST')=>{const r=await fetch(url+path,{method,headers:{origin:url,'content-type':'application/json'},...(body===undefined?{}:{body:JSON.stringify(body)})});assert.ok(r.ok,`${method} ${path}: ${await r.clone().text()}`);return r.json();};
+ const state=()=>call('/api/state',undefined,'GET');
+ const view=async day=>{const s=await state();const before=JSON.stringify(s);const items=nextActions(s,day);assert.equal(JSON.stringify(s),before);return items;};
+ const scan=async()=>{await call('/api/scans',{mode:'fixture'});for(let i=0;i<200;i++){const s=await state();if(s.run.status!=='running')return s;await new Promise(r=>setTimeout(r,5));}throw Error('scan timeout');};
+ await call('/api/profile',profile);await call('/api/companies',{companies});
+ let s=await scan();s=await call('/api/opportunities',{resultKey:s.run.results[0].key,baseRevision:s.revision});const id=s.opportunities[0].id;
+ const decision=async patch=>{const o=(await state()).opportunities.find(o=>o.id===id);return call('/api/opportunities/'+id,{decisionRevision:o.decisionRevision,stage:o.stage,note:o.note,nextAction:o.nextAction,dueDate:o.dueDate,...patch});};
+ await decision({nextAction:'Ask about interview scope',dueDate:'2026-10-21',note:'Synthetic weekly scenario'});
+ assert.ok((await view('2026-10-19')).some(i=>i.kind==='planned'));
+ await call('/api/applications/'+id,{revision:0,cvVersion:'Synthetic v1',cvText:'Confirmed fictional experience',coverLetter:'',answers:'',files:[]});
+ assert.ok((await view('2026-10-20')).some(i=>i.kind==='packet-ready'));
+ assert.ok(!(await view('2026-10-21')).some(i=>i.kind==='overdue'),'due today is not overdue');
+ await decision({stage:'applied'});
+ assert.ok(!(await view('2026-10-21')).some(i=>i.kind.startsWith('packet-')));
+ await call('/api/mail/intake',{origin:'test',transportId:'week-interview',from:'recruiter@example.com',to:`op-${id}@apply.example.com`,subject:'Synthetic interview',text:'We would like to invite you to an interview. Please choose a time.'});
+ s=await state();const m=s.messages[0];assert.equal(s.opportunities[0].stage,'applied','mail never implicitly changes stage');
+ assert.equal((await view('2026-10-22'))[0].kind,'overdue');
+ await call('/api/mail/tasks/'+m.id,{revision:0,done:true});
+ assert.ok(!(await view('2026-10-22')).some(i=>i.kind==='message'));
+ await call('/api/mail/tasks/'+m.id,{revision:1,done:false});
+ await call('/api/mail/proposals/'+m.id,{revision:m.revision,decisionRevision:s.opportunities[0].decisionRevision});
+ await decision({nextAction:'Prepare interview questions',dueDate:'2026-10-25'});
+ await new Promise(r=>server.close(r));await open();
+ assert.ok((await view('2026-10-23')).some(i=>i.kind==='message'),'reopened task survives restart');
+ await scan();s=await state();assert.equal(s.opportunities[0].stage,'interview');assert.equal(s.opportunities[0].nextAction,'Prepare interview questions');
+ assert.ok((await view('2026-10-24')).some(i=>i.kind==='planned'));
+ await decision({stage:'archived'});
+ assert.equal((await view('2026-10-25')).length,0,'archived opportunity leaves active overview');
+ await decision({stage:'interview'});
+ assert.ok((await view('2026-10-25')).some(i=>i.kind==='message'),'reopening restores unfinished work');
+ assert.ok(!(await view('2026-10-25')).some(i=>i.kind==='overdue'));
+});

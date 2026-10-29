@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Your account — Rolemorrow</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/entry.css" />
+    <script type="module" src="/account.js"></script>
+  </head>
+  <body>
+    <header class="masthead">
+      <a href="/welcome" class="brand">Rolemorrow</a><a href="/">Open workspace</a>
+    </header>
+    <main>
+      <div class="workspace-heading">
+        <div>
+          <h1>Your Rolemorrow account.</h1>
+          <p>Sign in to your own career workspace.</p>
+        </div>
+      </div>
+      <div class="workspace">
+        <aside>
+          <h2>Your workspace</h2>
+          <p class="aside-note">
+            Your saved profile, vacancies and correspondence belong to your account.
+          </p>
+          <p class="aside-note">
+            Creating an account does not send an application or connect your personal mailbox.
+          </p>
+          <a href="/">Open workspace</a>
+        </aside>
+        <section class="view" aria-label="Account access">
+          <div id="account-status" role="status" aria-live="polite" tabindex="-1" hidden></div>
+          <nav id="account-navigation" aria-label="Account options">
+            <button type="button" data-account-panel="login" aria-current="page">Sign in</button
+            ><button type="button" data-account-panel="register">Create account</button
+            ><button type="button" data-account-panel="request-reset">Forgot password</button>
+          </nav>
+          <section id="login-panel" aria-labelledby="login-heading">
+            <div class="section-heading">
+              <h2 id="login-heading" tabindex="-1">Sign in</h2>
+              <p>Use the email address you verified for this account.</p>
+            </div>
+            <form id="login-form">
+              <label for="login-email">Email address</label
+              ><input
+                id="login-email"
+                type="email"
+                autocomplete="username"
+                maxlength="254"
+                required
+              /><label for="login-password">Password</label
+              ><input
+                id="login-password"
+                type="password"
+                autocomplete="current-password"
+                minlength="12"
+                maxlength="128"
+                required
+              />
+              <div class="form-footer">
+                <p>Sign-in details are sent only when you submit.</p>
+                <button type="submit">Sign in</button>
+              </div>
+            </form>
+          </section>
+          <section id="register-panel" aria-labelledby="register-heading" hidden>
+            <div class="section-heading">
+              <h2 id="register-heading" tabindex="-1">Create your account</h2>
+              <p>We will email a verification link before you can open your workspace.</p>
+            </div>
+            <form id="register-form">
+              <label for="register-name">Your name</label
+              ><input id="register-name" autocomplete="name" maxlength="100" required /><label
+                for="register-email"
+                >Email address</label
+              ><input
+                id="register-email"
+                type="email"
+                autocomplete="username"
+                maxlength="254"
+                required
+              /><label for="register-password">Choose a password</label
+              ><input
+                id="register-password"
+                type="password"
+                autocomplete="new-password"
+                minlength="12"
+                maxlength="128"
+                aria-describedby="register-password-help"
+                required
+              />
+              <p id="register-password-help" class="help">
+                Use 12 to 128 characters. A unique password is best.
+              </p>
+              <div class="account-policy-choices">
+                <label class="checkbox"
+                  ><input id="register-terms" type="checkbox" required /><span
+                    >I accept the
+                    <a href="/terms" target="_blank" rel="noopener">Terms of service</a>.</span
+                  ></label
+                ><label class="checkbox"
+                  ><input id="register-privacy" type="checkbox" required /><span
+                    >I acknowledge the
+                    <a href="/privacy" target="_blank" rel="noopener">Privacy notice</a> and how my
+                    account information is handled.</span
+                  ></label
+                >
+                <p class="account-policy-note">
+                  Live AI checks and email sending have separate, action-specific approvals. You can
+                  save jobs and explore fictional examples without a live AI check.
+                </p>
+                <p id="register-policy-status" class="help" aria-live="polite">
+                  Loading current policies…
+                </p>
+              </div>
+              <div class="form-footer">
+                <p>Check your email after creating the account.</p>
+                <button type="submit">Create account</button>
+              </div>
+            </form>
+          </section>
+          <section id="check-email-panel" aria-labelledby="check-email-heading" hidden>
+            <div class="section-heading">
+              <h2 id="check-email-heading" tabindex="-1">Check your email</h2>
+              <p>
+                If an account can be created with this address, a verification link will arrive.
+              </p>
+            </div>
+            <ol class="verification-next">
+              <li>Open the verification message. Check spam if you cannot find it.</li>
+              <li>Confirm the link you requested.</li>
+              <li>Return here and sign in with your password.</li>
+            </ol>
+            <p class="help">Creating an account does not sign you in or send an application.</p>
+            <div class="actions">
+              <button type="button" data-account-panel="login">Go to sign in</button
+              ><button type="button" class="text-button" data-account-panel="register">
+                Use another email
+              </button>
+            </div>
+          </section>
+          <section id="policies-panel" aria-labelledby="policies-heading" hidden>
+            <div class="section-heading">
+              <h2 id="policies-heading" tabindex="-1">Review the current service policies</h2>
+              <p>
+                Your account and saved work remain available. Review these choices before continuing
+                in your workspace.
+              </p>
+            </div>
+            <form id="policy-form">
+              <div class="account-policy-choices">
+                <label class="checkbox"
+                  ><input id="policy-terms" type="checkbox" required /><span
+                    >I accept the current
+                    <a href="/terms" target="_blank" rel="noopener">Terms of service</a>.</span
+                  ></label
+                ><label class="checkbox"
+                  ><input id="policy-privacy" type="checkbox" required /><span
+                    >I acknowledge the current
+                    <a href="/privacy" target="_blank" rel="noopener">Privacy notice</a>.</span
+                  ></label
+                >
+                <p id="policy-versions" class="help"></p>
+                <p class="account-policy-note">
+                  This does not authorize live AI checks or application emails. Those actions ask
+                  for approval separately.
+                </p>
+              </div>
+              <button type="submit">Save and continue</button>
+            </form>
+            <div class="actions">
+              <button type="button" class="text-button" id="policy-account-options">
+                Account options and deletion</button
+              ><button type="button" class="secondary" id="policy-signout">Sign out</button>
+            </div>
+          </section>
+          <section id="request-reset-panel" aria-labelledby="request-reset-heading" hidden>
+            <div class="section-heading">
+              <h2 id="request-reset-heading" tabindex="-1">Reset your password</h2>
+              <p>Enter your account email. If it is registered, we will send a reset link.</p>
+            </div>
+            <form id="request-reset-form">
+              <label for="reset-email">Account email address</label
+              ><input
+                id="reset-email"
+                type="email"
+                autocomplete="username"
+                maxlength="254"
+                required
+              />
+              <div class="form-footer">
+                <p>The response does not reveal whether an account exists.</p>
+                <button type="submit">Request reset link</button>
+              </div>
+            </form>
+          </section>
+          <section id="verify-panel" aria-labelledby="verify-heading" hidden>
+            <div class="section-heading">
+              <h2 id="verify-heading" tabindex="-1">Verify your email</h2>
+              <p>Confirm this verification link, then sign in with your password.</p>
+            </div>
+            <button type="button" id="verify-email">Verify email address</button>
+            <p class="help">Use only a verification link you requested.</p>
+          </section>
+          <section id="reset-panel" aria-labelledby="reset-heading" hidden>
+            <div class="section-heading">
+              <h2 id="reset-heading" tabindex="-1">Choose a new password</h2>
+              <p>This uses the reset link you opened. It does not sign you in automatically.</p>
+            </div>
+            <form id="reset-form">
+              <label for="new-password">New password</label
+              ><input
+                id="new-password"
+                type="password"
+                autocomplete="new-password"
+                minlength="12"
+                maxlength="128"
+                aria-describedby="new-password-help"
+                required
+              />
+              <p id="new-password-help" class="help">Use 12 to 128 characters.</p>
+              <div class="form-footer">
+                <p>You can sign in after the password is changed.</p>
+                <button type="submit">Save new password</button>
+              </div>
+            </form>
+          </section>
+          <section id="profile-panel" aria-labelledby="profile-heading" hidden>
+            <div class="section-heading">
+              <h2 id="profile-heading" tabindex="-1">Your account</h2>
+              <p id="account-name"></p>
+            </div>
+            <dl>
+              <dt>Email address</dt>
+              <dd id="account-email"></dd>
+              <dt>Email verification</dt>
+              <dd id="account-verification"></dd>
+            </dl>
+            <section class="account-start" aria-labelledby="account-start-heading">
+              <h3 id="account-start-heading">Your first application workspace</h3>
+              <ol>
+                <li>Start with your profile and goal.</li>
+                <li>Add employer sources or save a vacancy link.</li>
+                <li>Review the evidence, then prepare a packet.</li>
+              </ol>
+              <p>
+                Profile sharing needs approval for each live check. General employer email sending
+                is not available yet; sending is limited to the owner’s test address.
+              </p>
+            </section>
+            <div class="actions">
+              <a id="account-workspace-link" href="/">Open workspace</a
+              ><button type="button" id="review-policies" class="secondary" hidden>
+                Review service policies</button
+              ><button type="button" id="logout" class="secondary">Sign out</button>
+            </div>
+            <details class="manual-intake">
+              <summary>Delete your account</summary>
+              <p>
+                Deleting your account removes its saved workspace, including your profile, vacancies
+                and correspondence.
+              </p>
+              <form id="delete-account-form">
+                <label for="delete-password">Confirm your password</label
+                ><input
+                  id="delete-password"
+                  type="password"
+                  autocomplete="current-password"
+                  minlength="12"
+                  maxlength="128"
+                  required
+                /><label class="checkbox"
+                  ><input id="delete-account-confirm" type="checkbox" required />I understand that
+                  this deletes my account and its saved workspace.</label
+                ><button type="submit" class="danger secondary">
+                  Delete account and workspace
+                </button>
+              </form>
+            </details>
+          </section>
+        </section>
+      </div>
+      <footer>
+        <span
+          >Rolemorrow account access · <a href="/terms" target="_blank" rel="noopener">Terms</a> ·
+          <a href="/privacy" target="_blank" rel="noopener">Privacy</a> ·
+          <a href="/cookies">Cookies</a> · <a href="/providers">Providers</a></span
+        ><span>Employer sources. Explicit uncertainty. Your decision.</span>
+      </footer>
+      <p><a href="/connections">Agent connections</a></p>
+      <p><a href="/imports">Import career history</a></p>
+    </main>
+  </body>
+</html>

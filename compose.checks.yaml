@@ -1,19 +1,61 @@
-name: rolemorrow-checks
+name: rolemorrow-release-checks
 services:
-  checks:
-    build:
-      context: .
-      dockerfile: Dockerfile.checks
+  database:
+    image: postgres:16-bookworm
     platform: linux/amd64
-    network_mode: none
+    user: '999:999'
     init: true
-    cpus: 2.0
+    network_mode: none
+    read_only: true
+    entrypoint: [sh, /scripts/database.sh]
+    environment:
+      POSTGRES_USER: synthetic_bootstrap
+      POSTGRES_PASSWORD: synthetic-bootstrap-only
+      POSTGRES_DB: rolemorrow_synthetic
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./ops/test/database.sh:/scripts/database.sh:ro
+      - ./ops/test/bootstrap.sql:/docker-entrypoint-initdb.d/001-test-roles.sql:ro
+      - observations:/observe
+    tmpfs:
+      - /var/lib/postgresql/data:rw,nosuid,nodev,size=2g,uid=999,gid=999,mode=0700
+      - /var/run/postgresql:rw,nosuid,nodev,size=16m,uid=999,gid=999,mode=0770
+      - /tmp:rw,nosuid,nodev,size=32m,mode=1777
+    cpus: 1
     mem_limit: 1g
     pids_limit: 256
     cap_drop: [ALL]
     security_opt: ['no-new-privileges:true']
-    logging:
-      driver: json-file
-      options:
-        max-size: '10m'
-        max-file: '2'
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -h 127.0.0.1 -U synthetic_bootstrap -d rolemorrow_synthetic && test -f /observe/capacity.json']
+      interval: 2s
+      timeout: 2s
+      retries: 30
+    logging: {driver: json-file, options: {max-size: '3m', max-file: '2'}}
+  checks:
+    build: {context: ., dockerfile: Dockerfile.checks}
+    platform: linux/amd64
+    user: '1000:1000'
+    init: true
+    network_mode: service:database
+    read_only: true
+    depends_on: {database: {condition: service_healthy}}
+    environment:
+      ROLEMORROW_PG_SYNTHETIC: '1'
+      RM_CAPACITY_FILE: /observe/capacity.json
+      RM_TEST_PG: postgresql://rm_migrator:synthetic-migrator@127.0.0.1:5432/rolemorrow_synthetic
+      RM_TEST_PG_WEB: postgresql://rm_web:synthetic-web@127.0.0.1:5432/rolemorrow_synthetic
+      RM_TEST_PG_COLLECTOR: postgresql://rm_collector:synthetic-collector@127.0.0.1:5432/rolemorrow_synthetic
+    volumes: [observations:/observe:ro]
+    tmpfs: ['/tmp:rw,nosuid,nodev,size=512m,mode=1777']
+    cpus: 2
+    mem_limit: 2g
+    pids_limit: 256
+    cap_drop: [ALL]
+    security_opt: ['no-new-privileges:true']
+    command: [sh, -c, 'npm run check && node --test --test-concurrency=1 tests/*.test.mjs']
+    logging: {driver: json-file, options: {max-size: '5m', max-file: '2'}}
+volumes:
+  observations:
+    driver: local
+    driver_opts: {type: tmpfs, device: tmpfs, o: 'size=1m,uid=999,gid=999,mode=0755'}

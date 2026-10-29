@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Agent connections · Rolemorrow</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Agent connections</h1>
+      <p>Connect Codex with the Rolemorrow MCP address: <code id="mcp-address"></code></p>
+      <p>
+        Sign in and review the requested permissions in the browser when Codex asks. Connections can
+        read and save your work according to the permissions you allow. Sending email is unavailable
+        through this connection.
+      </p>
+      <div id="connections-list"></div>
+      <p id="connection-status" role="status"></p>
+      <a href="/">Back to workspace</a>
+      <script type="module" src="/connections.js"></script>
+    </main>
+  </body>
+</html>

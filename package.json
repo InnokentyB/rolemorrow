@@ -4,20 +4,29 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=24"
+    "node": ">=24.22.0"
   },
   "scripts": {
     "start": "node --env-file-if-exists=.env app/server.mjs",
     "test": "node --test tests/*.test.mjs",
-    "test:e2e": "node tests/e2e.mjs && node tests/browser-cases.mjs && node tests/preferences-e2e.mjs && node tests/live-discovery-e2e.mjs && node tests/workspace-e2e.mjs && node tests/tracking-e2e.mjs && node tests/mail-e2e.mjs && node tests/platform-e2e.mjs && node tests/journey-e2e.mjs",
+    "test:e2e": "node tests/e2e.mjs && node tests/browser-cases.mjs && node tests/preferences-e2e.mjs && node tests/live-discovery-e2e.mjs && node tests/workspace-e2e.mjs && node tests/tracking-e2e.mjs && node tests/mail-e2e.mjs && node tests/platform-e2e.mjs && node tests/journey-e2e.mjs && node tests/url-intake-e2e.mjs && node tests/native-mail-e2e.mjs && node tests/account-ui-e2e.mjs && node tests/account-e2e.mjs && node tests/public-entry-e2e.mjs && node tests/organization-catalog-e2e.mjs",
+    "test:isolation": "node tests/public-isolation-e2e.mjs",
     "check": "node --check app/server.mjs && node --check public/app.js && node --check public/mail.js && node --check app/mail.mjs && node --check public/matching.js",
-    "test:quality": "node --test tests/platform.test.mjs",
-    "test:quality:live": "node tests/quality-live.mjs"
+    "test:quality": "node --test tests/platform.test.mjs"
   },
   "dependencies": {
-    "undici": "^7.30.1"
+    "undici": "^7.30.1",
+    "pg": "8.16.3",
+    "@modelcontextprotocol/server": "2.3.1",
+    "@modelcontextprotocol/node": "2.1.1",
+    "@node-oauth/oauth2-server": "5.3.1",
+    "zod": "4.6.7"
   },
   "devDependencies": {
-    "playwright": "1.62.1"
+    "playwright": "1.62.1",
+    "@modelcontextprotocol/client": "2.3.1"
+  },
+  "overrides": {
+    "@hono/node-server": "2.1.3"
   }
 }

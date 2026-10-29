@@ -5,5 +5,6 @@ RUN chmod 0644 package.json package-lock.json && npm ci --ignore-scripts --no-au
 COPY --chown=node:node app ./app
 COPY --chown=node:node public ./public
 COPY --chown=node:node tests ./tests
+COPY --chown=node:node ops ./ops
 USER node
 CMD ["sh", "-c", "npm run check && npm test"]

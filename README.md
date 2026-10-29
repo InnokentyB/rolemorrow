@@ -1,126 +1,73 @@
 # Rolemorrow
 
-An evidence-led career search workspace built for the **Nebius × NVIDIA Global AI Hackathon**. Rolemorrow is a provisional working name, not a cleared trademark or registered domain.
+Evidence-led job search, application preparation and correspondence tracking.
 
-Start with confirmed experience and a career goal. Choose employers. Inspect vacancy requirements against quoted profile evidence, keep your own decisions between searches, prepare an application packet, and organize correspondence.
+**Nebius × NVIDIA Global AI Hackathon — 29 October 2026 source release.**
 
-**Status:** working single-user prototype. Live vacancy search and NVIDIA inference have been exercised during development. Mail is **test/manual only**. There is no public hosted demo, real email transport, automatic job application, production authentication or multi-tenant isolation in this release. Use fictional data when demonstrating.
+[Public demonstration video](https://youtu.be/o58_LBnHaws) · [Judge guide](docs/JUDGE-GUIDE.md) · [Evidence and limitations](docs/EVIDENCE.md)
 
-## Quick start — Docker
+## What this release demonstrates
 
-Requires Docker Engine and Docker Compose on a supported Linux amd64 host. The application port is published on localhost only.
+A fictional candidate loads confirmed experience, checks selected fictional employers, inspects the evidence for a role, saves a job and next action, then saves CV content, a cover letter and screening answers in a versioned packet. This is the local application used for the video, with private operator details replaced by explicit demo placeholders. It is not an employer-submission bot or a guarantee of a hiring outcome.
 
-```sh
-cp .env.example .env
-docker compose build career
-docker compose up -d career
-docker compose ps
-curl http://127.0.0.1:3027/health
-docker compose logs --tail=100 career
-```
+The public source includes account, import, audit, mail and provider adapters, but the default judge build does **not** load private accounts, provider credentials, real mail or live collection. Do not put personal data into a shared demonstration. Public-service operators must configure their own legal details and operational controls; the example legal identity is deliberately not a real person or registration.
 
-Open **http://127.0.0.1:3027/**. Choose **Use fictional example**, then **Check selected companies**. No credentials or provider requests are needed. The example overwrites the current profile/company inputs: use a fresh demo volume rather than your personal workspace.
+## Judge test build — no account or API keys
 
-To stop:
-
-```sh
-docker compose stop career
-# Removes containers/network, retaining the named data volume:
-docker compose down
-```
-
-Do not use `down -v` as routine cleanup. State lives in the named volume at `/app/data/state.json`; it is private but not application-encrypted. Before upgrades, preserve a backup and the previous image. Never expose this prototype directly to the Internet.
-
-For a remote Docker host, forward its localhost port over SSH. Follow your own host execution policy; the commands above do not require running the app natively.
-
-## Isolated judge test build
-
-Use a separate fictional workspace alongside an existing personal installation:
+Requires Docker Engine and Docker Compose, Linux amd64. Download/clone this public repository, then:
 
 ```sh
 docker compose -f compose.demo.yaml build demo
 docker compose -f compose.demo.yaml up -d --wait demo
 ```
 
-Open **http://127.0.0.1:3028/**, select **Use fictional example**, then run a check. This Compose file does not pass provider credentials, fixes live mode off, and uses its own volume. It publishes only on loopback. For a remote host, forward port 3028 over SSH. Its small network subnet can be changed with `ROLEMORROW_DEMO_SUBNET` if it overlaps your network. Stop with `docker compose -f compose.demo.yaml stop demo`; inspect health/logs with `ps` and `logs --tail=100 demo` using the same Compose file. Keep the volume to retain the fictional story; reset through the app's explicit deletion action if needed.
+Open **http://127.0.0.1:3028/** in your browser. Click **Use fictional example**, then **Check selected companies**. Follow the [five-minute judge walkthrough](docs/JUDGE-GUIDE.md).
 
-The test build is downloadable source, not a publicly hosted service. See [submission draft](docs/SUBMISSION.md) and [matching acceptance](docs/QUALITY.md).
+This is a downloadable, locally running test build, not a claim that this commit is deployed at app.rolemorrow.com. It is independent of the owner's accounts and data. Each installation has its own fictional workspace. No sign-in, private invitation or paid service is required. The default build does not exercise actual inference: the dated provider records are described separately in the evidence guide.
 
-## Demo journey
+The host port binds only to loopback. On a remote Docker host, forward port3028 over SSH using your normal access controls. Change `ROLEMORROW_DEMO_SUBNET` if the default network overlaps your own network. Keep browser security enabled.
 
-1. Confirm profile and goal; select up to five official employer career pages.
-2. Run the fictional example, or explicitly configure/consent to a live check.
-3. Review fit category, conditions, coverage and exact employer/profile quotations. Unknown evidence remains unknown; fit is not hiring probability.
-4. Save a job. In **Saved jobs**, report a stage, note and next action/date. A new scan preserves these decisions.
-5. In **Applications**, save a CV version/text or PDF/text files, letter and screening-answer notes; export the saved packet. Nothing is submitted to an employer.
-6. Simulate a clearly labeled invitation or add an email manually. **Inbox** shows attention items. Reply drafts remain unsent; stage proposals require confirmation.
-
-## Nebius, NVIDIA and Tavily
-
-Live mode needs server opt-in (`ALLOW_LIVE=1`), `NEBIUS_API_KEY`, `TAVILY_API_KEY`, and an exact available `NEBIUS_MODEL` in the `nvidia/` namespace. `NEBIUS_ASSESSMENT_MODEL` optionally selects a separate assessment model. Configure only `.env`/deployment secrets; never commit keys.
-
-The exercised development configuration used:
-
-- extraction: `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B`;
-- requirement review, assessment and independent claim verification: `nvidia/nemotron-3-super-120b-a12b`;
-- inference: Nebius Token Factory chat completions with structured JSON responses;
-- discovery: Tavily Search followed by direct DNS-validated retrieval of employer/linked ATS sources.
-
-Model availability is project-dependent; check the current provider catalogue before enabling live mode. The UI requires consent before transmitting the saved profile/goal to Nebius; public-source search queries go to Tavily. Local deletion cannot delete provider-held records.
-
-Search snippets never count as requirements. Only official employer sources or literally linked ATS tenants are accepted. Deterministic guards reject invalid quotes/references. An independent model pass filters non-requirements and another can only downgrade proposed supported claims; invalid review responses fail closed. A posting uses up to four model calls, so keep live limits small. Exact quotations and a second model opinion still do not prove semantic correctness. Discovery is bounded and may be partial; no claim of complete market coverage or guaranteed eligibility is made.
-
-Official provider references: [Nebius quickstart](https://docs.tokenfactory.nebius.com/quickstart), [structured inference](https://docs.tokenfactory.nebius.com/ai-models-inference/json), [Tavily Search](https://docs.tavily.com/documentation/api-reference/endpoint/search).
-
-## Verification
+Health and logs:
 
 ```sh
-docker compose -f compose.checks.yaml build
-docker compose -f compose.checks.yaml run --rm --no-deps checks
+docker compose -f compose.demo.yaml ps
+docker compose -f compose.demo.yaml logs --tail=50 demo
 ```
 
-Checks run without network access, runtime secrets or the personal data volume. This release has 105 deterministic logic/API checks, including a frozen matrix of 15 profile/vacancy combinations. Shared server/browser ranking puts role and core evidence before soft preferences. Evidence can be full, partial (with matched and missing clauses), or unconfirmed; it is not a hiring probability. Load the fictional example and check its employers to see all three states without API keys.
+The image health check uses `/health`. Stop with `docker compose -f compose.demo.yaml stop demo`. Temporary checks use `run --rm`. Data remains in the project-specific Docker volume; do not use `down -v` or delete volumes as routine cleanup. For any upgrade of an existing installation, preserve its data and prior image first.
 
-The nine browser scripts run with disposable stores and synthetic providers:
+## Verification commands
+
+All installs/builds/tests run in Docker, not a native host Node process:
 
 ```sh
+docker compose -f compose.checks.yaml build checks
+docker compose -f compose.checks.yaml up -d --wait database
+docker compose -f compose.checks.yaml run --rm --no-deps checks
+docker compose -f compose.checks.yaml stop database
 docker compose -f compose.browser.yaml build browser
 docker compose -f compose.browser.yaml run --rm --no-deps browser
 ```
 
-The Linux amd64 browser image uses non-root Chromium with its sandbox enabled, all capabilities dropped and networking disabled during tests. The checked seccomp profile permits the user-namespace sandbox syscalls and chroot; it does not grant container capabilities. Chromium 155 was observed in the verified build; the Debian browser package may receive updates. No ports or persistent browser services are started; temporary containers are removed on exit. Both deterministic and browser jobs run in GitHub Actions. Automated browser checks do not replace human accessibility/usefulness acceptance.
+Browser checks run sandboxed Chromium. No provider keys are needed. The checks Compose starts a separate synthetic PostgreSQL in temporary memory-backed storage, with no network egress or host ports, and measures its actual capacity. Its visibly synthetic passwords are fixture values, never production credentials. Start the database before the check command and stop it afterward. Missing prerequisites are failures, never successful coverage. Do not point tests at a personal or production database. Two offline retention CLI tools are included because their negative tests exercise them; no cleanup is activated automatically.
 
-A separate opt-in check makes at most 12 real Nebius inference requests against six frozen synthetic cases (no Tavily discovery):
+## NVIDIA, Nebius and Tavily
 
-```sh
-docker compose -f compose.checks.yaml build checks
-docker run --rm --init --cpus=1 --memory=512m --pids-limit=128 --cap-drop=ALL --security-opt=no-new-privileges --read-only --env-file /absolute/private/runtime.env -e CONFIRM_PLATFORM_QUALITY=1 rolemorrow-checks-checks node tests/quality-live.mjs
-```
+The actual-provider configuration exercised during development used:
 
-Keep that environment file outside the checkout; supply only Nebius configuration needed for this workload. Never commit keys or personal state. The original six-case bounded report is [QUALITY-LIVE.json](docs/QUALITY-LIVE.json): six of six passed, with zero false full-support claims and zero false negatives within this subset. This is not a market accuracy estimate. See [platform acceptance](docs/PLATFORM-ACCEPTANCE.md) for scenarios and verification limits, and [user journeys](docs/USER-JOURNEYS.md) for the manual acceptance path.
+- NVIDIA `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B` for requirement extraction;
+- NVIDIA `nvidia/nemotron-3-super-120b-a12b` for assessment/review;
+- Nebius Token Factory for runtime inference;
+- Tavily for discovery.
 
-Additional multi-persona evaluation: [nine synthetic candidates and preserved v1/v2 results](docs/PERSONA-EVALUATION.md). V2 passed 14/15 fixed cases: explicit profession differences and all three product-tenure cases passed; a junior/growth assessment was unavailable on the initial run. Level review separates stated scope from overall seniority. See [rules and limits](docs/ROLE-LEVEL-ACCEPTANCE.md).
+The app UI is not hosted on Nebius AI Cloud. Provider presence in source or environment is not evidence of a successful call. See the dated and scoped [evidence guide](docs/EVIDENCE.md), including a real-model adaptation refusal.
 
-## Saved source checks and next actions
+Optional live search requires explicit server opt-in `ALLOW_LIVE=1`, `NEBIUS_API_KEY`, `TAVILY_API_KEY` and the available `NEBIUS_MODEL` / `NEBIUS_ASSESSMENT_MODEL` configured only as private runtime environment variables. It can incur charges. The default judge Compose does not pass those variables or read a private `.env`. Never embed keys in source, browser code, images or shared links. Optional Resend mail also needs separate configuration and explicit per-message confirmation; the demo sends no email.
 
-Saved jobs have an explicit **Check vacancy source** action. Fictional checks never access the network. Real checks require live access and send only the public posting URL, without profile or application content. A first readable page records a baseline; missing saved core wording or later page changes ask for review. These observations do not rerun matching. Dynamic/access-blocked pages remain unavailable. A 404/410 is not proof that the employer closed the vacancy. Source change alerts remain until **Mark source reviewed**; this acknowledgement does not update an assessment or packet. History retains the last 20 checks and a separate last-readable baseline. No scheduled monitor runs.
+## Limits and development provenance
 
-Inbox combines saved-role next actions, overdue dates (UTC calendar days), uncertainty, packet readiness and existing correspondence tasks. Links lead to the existing decision/application controls; no second task store or automatic stage changes. See [acceptance scenarios](docs/TRACKING-ACTIONS-ACCEPTANCE.md).
+Discovery is partial and source-dependent. Fit is an inference with visible unknowns, not a hiring probability. AI document adaptation remains a quality-limited beta: invalid claims/references can cause refusal after generation or repair. A saved/manual packet is not proof of a successful AI-generated document. Provider acceptance, inbox delivery, reply materialization and employer/ATS acceptance remain distinct.
 
-## Limits and next work
+This snapshot advances the public18October prototype with the current local application used in the video. Later implementation includes private-storage/audit/import/MCP and adaptation controls; their inclusion in source does not certify production deployment or broad model quality. No personal career files, emails, runtime databases or operational credentials are included. Confirm final entrant/team and development-period disclosure in Devpost.
 
-- Single-process atomic JSON, single owner; no production authorization or account isolation.
-- Job matching still needs semantic evaluation on a held-out set; model interpretations can be wrong.
-- Mail adapter accepts local test/manual messages; no real mailbox, public webhook or sender exists.
-- English phrase-based mail suggestions, not an LLM mail classifier; corrections require exact source excerpts.
-- Files: PDF/UTF-8 text, two files up to 256 KiB each. Downloads are forced attachments; no malware scanning service is integrated.
-- Storage: 200 messages, 500 saved jobs and 32 MiB total. Compatibility backups are private; explicit workspace deletion includes app-managed backups.
-- Public demo, video and final hackathon submission remain separate tasks.
-
-See [architecture](docs/ARCHITECTURE.md) and [readiness](docs/READINESS.md). No personal profiles, real correspondence, CVs, credentials, operator backups or internal review screenshots are included.
-
-## Origin and license
-
-This career-search implementation began during the competition period in October 2026 after a product pivot. The earlier banking prototype is separate and is not included. Test-Driven Product Development (TDPD), an original method by Innokenty Bodrov, guided scenario-first implementation; automated engineering checks do not replace human UAT.
-
-MIT — see [LICENSE](LICENSE). Third-party packages retain their own licenses. No endorsement by Nebius, NVIDIA or Tavily is implied.
+MIT license: [LICENSE](LICENSE). See [release verification](docs/RELEASE-VERIFICATION.md) for fresh checks of this exact package.

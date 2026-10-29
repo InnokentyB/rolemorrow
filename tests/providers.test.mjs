@@ -255,7 +255,7 @@ test('PP01 partial proposals are independently verified against the claimed clau
  let reviewed=0,payload;const text='Write SQL queries and use Snowflake.';
  const p=createProviders({env:liveEnv,verifyEvidence:async(_j,_p,a)=>{reviewed++;return a.rows.map(r=>r.requirementId);},transport:async(_url,opts)=>{payload=JSON.parse(opts.body);return {text:JSON.stringify({choices:[{message:{content:JSON.stringify({direction:'aligned',directionReason:'Same role',rows:[{requirementId:'r1',status:'partial',factId:'sql',profileQuote:'I write SQL queries.',jobQuote:'Write SQL queries',unconfirmedQuote:'use Snowflake'}]})}}]})};}});
  const a=await p.assess({title:'Product Manager',requirements:[{id:'r1',text,core:true}]},{...profile,facts:[{id:'sql',text:'I write SQL queries.'}]});
- assert.equal(a.rows[0].status,'partial');assert.equal(reviewed,1);assert.ok(payload.response_format.json_schema.schema.properties.rows.items.properties.status.enum.includes('partial'));
+ assert.equal(a.rows[0].status,'partial');assert.equal(reviewed,1);assert.ok(payload.response_format.json_schema.schema.properties.rows.items.anyOf.some(v=>v.properties.status.enum.includes('partial')));
 });
 test('PP02 failed partial support is downgraded without retaining a fact or missing-span claim',async()=>{
  const text='Own APIs and build dashboards.';const p=createProviders({env:liveEnv,verifyEvidence:async()=>[],transport:async()=>({text:JSON.stringify({choices:[{message:{content:JSON.stringify({direction:'aligned',directionReason:'Same role',rows:[{requirementId:'r1',status:'partial',factId:'f1',profileQuote:'AI product evaluation',jobQuote:'Own APIs',unconfirmedQuote:'build dashboards'}]})}}]})})});
@@ -279,4 +279,34 @@ test('RF03 tenure in finance operations is not product-management tenure',async(
 test('RF01 provider boundary normalizes recognized professions without rejecting alternative targets',async()=>{
  const text='Own API integrations.';const p=getProviders({env:liveEnv,transport:async()=>({text:JSON.stringify({choices:[{message:{content:JSON.stringify({direction:'uncertain',directionReason:'Shared API vocabulary.',rows:[{requirementId:'r1',status:'unknown',factId:null,profileQuote:null,jobQuote:text}]})}}]})})});
  for(const [roles,direction]of [['Machine Learning Engineer','different'],['Product Designer','different'],['Machine Learning Engineer or Product Manager','aligned']])assert.equal((await p.assess({title:'Platform Product Manager',requirements:[{id:'r1',text,core:true}]},{...profile,goal:{...profile.goal,roles}})).direction,direction);
+});
+
+test('extraction retries a paraphrased quote once and still requires exact source evidence',async()=>{
+ for(const repairSucceeds of [true,false]){
+  let extractionCalls=0,reviewCalls=0;
+  const p=getProviders({env:{...liveEnv,LIVE_MAX_JOBS_PER_COMPANY:'1'},reviewRequirements:async job=>{reviewCalls++;return job.requirements.map(r=>r.id);},transport:async(url)=>{
+   if(url.includes('tavily.com'))return {text:'{"results":[]}'};
+   if(url==='https://employer.example/careers')return {url,text:'<a href="https://jobs.ashbyhq.com/official">Open roles</a>'};
+   if(url.includes('api.ashbyhq.com'))return {url,text:JSON.stringify({jobs:[{id:'pm',title:'Product Manager',jobUrl:'https://jobs.ashbyhq.com/official/pm',descriptionPlain:'Own product discovery. Lead engineering collaboration.',isListed:true}]})};
+   if(url.includes('tokenfactory')){
+    extractionCalls++;const quote=repairSucceeds&&extractionCalls===2?'Own product discovery.':'Own all product discovery.';
+    return {text:JSON.stringify({choices:[{message:{content:JSON.stringify({jobs:[{title:'Product Manager',countries:[],workMode:'unknown',salary:null,authorizationRequirement:null,requirements:[{text:quote,core:true},{text:'Lead engineering collaboration.',core:true}]}]})}}]})};
+   }
+   throw Error('Unexpected source');
+  }});
+  const result=await p.discover({name:'Employer',homepage:'https://employer.example',careers:'https://employer.example/careers'},{profile:{goal:{roles:'Product Manager'}}});
+  assert.equal(extractionCalls,2,'At most one repair request per posting');assert.equal(result.jobs.length,repairSucceeds?1:0);assert.equal(reviewCalls,repairSucceeds?1:0,'Invalid quotes never reach semantic review');
+  if(repairSucceeds){assert.ok(result.jobs[0].requirements.some(r=>r.text==='Own product discovery.'));assert.ok(result.jobs[0].requirements.some(r=>r.text==='Lead engineering collaboration.'));}
+ }
+});
+test('optional extraction evidence remains optional even without a known preference phrase',async()=>{
+ const text='Experience with SQL would be advantageous';
+ const p=getProviders({env:liveEnv,reviewRequirements:async j=>j.requirements.map(r=>r.id),transport:async url=>{
+  if(url.includes('tavily.com'))return {text:'{"results":[]}'};
+  if(url==='https://employer.example/careers')return {url,text:'<a href="https://jobs.ashbyhq.com/team">Jobs</a>'};
+  if(url.includes('api.ashbyhq.com'))return {url,text:JSON.stringify({jobs:[{title:'Product Manager',jobUrl:'https://jobs.ashbyhq.com/team/pm',descriptionPlain:text}]})};
+  return {text:JSON.stringify({choices:[{message:{content:JSON.stringify({jobs:[{title:'Product Manager',countries:[],workMode:'unknown',salary:null,authorizationRequirement:null,requirements:[{text,core:false}]}]})}}]})};
+ }});
+ const result=await p.discover({name:'Employer',homepage:'https://employer.example',careers:'https://employer.example/careers'});
+ assert.equal(result.jobs.length,1);assert.equal(result.jobs[0].requirements[0].core,false);
 });
